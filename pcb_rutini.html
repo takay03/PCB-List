@@ -1,0 +1,775 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Aylık PCB Tasarım Rutini</title>
+<style>
+  * { box-sizing: border-box; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 2rem 1.5rem;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.6;
+  }
+  h1 {
+    border-bottom: 2px solid #30363d;
+    padding-bottom: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  .intro { color: #8b949e; margin-bottom: 2rem; }
+  .progress-bar {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    height: 24px;
+    overflow: hidden;
+    margin-bottom: 0.5rem;
+  }
+  .progress-fill {
+    background: linear-gradient(90deg, #238636, #2ea043);
+    height: 100%;
+    transition: width 0.3s ease;
+  }
+  .progress-text { font-size: 0.9rem; color: #8b949e; margin-bottom: 2rem; }
+  h2 {
+    margin-top: 2.5rem;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+  h2.level-1 { background: rgba(46, 160, 67, 0.15); border-left: 4px solid #2ea043; }
+  h2.level-2 { background: rgba(210, 153, 34, 0.15); border-left: 4px solid #d29922; }
+  h2.level-3 { background: rgba(219, 109, 40, 0.15); border-left: 4px solid #db6d28; }
+  h2.level-4 { background: rgba(248, 81, 73, 0.15); border-left: 4px solid #f85149; }
+  .level-desc {
+    color: #8b949e;
+    font-size: 0.9rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+    padding-left: 1rem;
+  }
+  ul { list-style: none; padding-left: 0; }
+  li.task {
+    margin: 0.25rem 0;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    transition: border-color 0.2s;
+    overflow: hidden;
+  }
+  li.task:hover { border-color: #58a6ff; }
+  li.task.done { background: rgba(46, 160, 67, 0.1); border-color: rgba(46, 160, 67, 0.4); }
+  li.task.done .label { text-decoration: line-through; color: #8b949e; }
+  .task-header {
+    display: flex;
+    align-items: center;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    user-select: none;
+    gap: 0.5rem;
+  }
+  .task-header:hover { background: #1c2128; }
+  input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: #2ea043;
+    flex-shrink: 0;
+  }
+  .label { flex: 1; }
+  .date { font-size: 0.8rem; color: #8b949e; font-style: italic; }
+  .expand-btn {
+    background: transparent;
+    border: 1px solid #30363d;
+    color: #8b949e;
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  .expand-btn:hover { color: #58a6ff; border-color: #58a6ff; }
+  .expand-btn.has-content { color: #2ea043; border-color: rgba(46, 160, 67, 0.4); }
+
+  /* Blog section */
+  .blog-section {
+    display: none;
+    padding: 1rem 1.25rem;
+    border-top: 1px solid #30363d;
+    background: #0d1117;
+  }
+  .blog-section.open { display: block; }
+  .blog-section h4 {
+    margin: 0 0 0.5rem 0;
+    color: #8b949e;
+    font-size: 0.85rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .notes-editor {
+    width: 100%;
+    min-height: 120px;
+    background: #161b22;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 0.75rem;
+    font-family: inherit;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    resize: vertical;
+  }
+  .notes-editor:focus { outline: none; border-color: #58a6ff; }
+  .notes-preview {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    padding: 0.75rem 1rem;
+    min-height: 120px;
+  }
+  .notes-preview:empty::before {
+    content: 'Henüz not yok. "Yaz" sekmesinden eklemeye başla.';
+    color: #6e7681;
+    font-style: italic;
+  }
+  .notes-preview p { margin: 0.4rem 0; }
+  .notes-preview code {
+    background: #1c2128;
+    padding: 0.1rem 0.4rem;
+    border-radius: 3px;
+    font-size: 0.9em;
+  }
+  .notes-preview pre {
+    background: #1c2128;
+    padding: 0.75rem;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
+  .notes-preview h3, .notes-preview h4 { margin: 0.8rem 0 0.4rem 0; }
+  .notes-preview a { color: #58a6ff; }
+  .notes-hint {
+    font-size: 0.75rem;
+    color: #6e7681;
+    margin-top: 0.25rem;
+  }
+  .editor-tabs {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .tab-btn {
+    background: #161b22;
+    color: #8b949e;
+    border: 1px solid #30363d;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px 4px 0 0;
+    cursor: pointer;
+    font-size: 0.85rem;
+    border-bottom: none;
+  }
+  .tab-btn.active { background: #1c2128; color: #e6edf3; border-color: #58a6ff; }
+
+  /* Images */
+  .images-area { margin-top: 1.5rem; }
+  .image-controls {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+  }
+  .add-image-btn {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px dashed #30363d;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .add-image-btn:hover { border-color: #58a6ff; border-style: solid; }
+  .image-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+  }
+  .image-tile {
+    position: relative;
+    aspect-ratio: 1;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    overflow: hidden;
+    cursor: pointer;
+  }
+  .image-tile img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+  }
+  .image-tile .delete-img {
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    background: rgba(218, 54, 51, 0.9);
+    color: white;
+    border: none;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 0.9rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity 0.2s;
+    padding: 0;
+  }
+  .image-tile:hover .delete-img { opacity: 1; }
+  .image-tile .img-caption {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(transparent, rgba(0,0,0,0.85));
+    color: white;
+    padding: 1.5rem 0.5rem 0.4rem 0.5rem;
+    font-size: 0.75rem;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
+  }
+
+  /* Lightbox */
+  .lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.92);
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    flex-direction: column;
+  }
+  .lightbox.open { display: flex; }
+  .lightbox img {
+    max-width: 90vw;
+    max-height: 80vh;
+    object-fit: contain;
+    border-radius: 6px;
+  }
+  .lightbox-caption {
+    color: #e6edf3;
+    margin-top: 1rem;
+    text-align: center;
+    max-width: 80%;
+  }
+  .lightbox-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    color: white;
+    background: transparent;
+    border: none;
+    font-size: 2rem;
+    cursor: pointer;
+  }
+
+  /* Controls */
+  .controls {
+    margin: 2rem 0 1rem 0;
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+  button.action {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+  }
+  button.action:hover { background: #30363d; border-color: #58a6ff; }
+  button.action.danger:hover { background: #da3633; border-color: #f85149; }
+
+  .notes-footer {
+    margin-top: 3rem;
+    padding: 1rem 1.5rem;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+  }
+  .notes-footer h3 { margin-top: 0; }
+  .notes-footer ul li {
+    background: transparent;
+    border: none;
+    cursor: default;
+    padding: 0.25rem 0;
+    display: list-item;
+    list-style: disc;
+    margin-left: 1.5rem;
+  }
+</style>
+</head>
+<body>
+
+<h1>🔧 Aylık PCB Tasarım Rutini</h1>
+<p class="intro">Her ay listeden bir proje seç ve tamamladığında işaretle. Her görevin altına notlar ve fotoğraflar ekleyebilirsin.</p>
+
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<div class="progress-text" id="progressText">0 / 0 tamamlandı</div>
+
+<div class="controls">
+  <button class="action" onclick="exportData()">📥 Yedek İndir (JSON)</button>
+  <button class="action" onclick="document.getElementById('importFile').click()">📤 Yedekten Yükle</button>
+  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
+  <button class="action danger" onclick="resetAll()">🗑️ Tümünü Sıfırla</button>
+</div>
+
+<h2 class="level-1">🟢 Seviye 1 — Başlangıç</h2>
+<p class="level-desc">THT ağırlıklı, tek katman yeterli. Workflow oturtmak için ideal.</p>
+<ul data-level="1" class="task-list">
+  <li data-key="555 Timer LED Blinker"><span class="label">555 Timer LED Blinker</span></li>
+  <li data-key="Elektronik zar (CD4017 + 7 LED)"><span class="label">Elektronik zar (CD4017 + 7 LED)</span></li>
+  <li data-key="LM3914 VU metre"><span class="label">LM3914 VU metre</span></li>
+  <li data-key="Logic probe"><span class="label">Logic probe</span></li>
+  <li data-key="Continuity tester"><span class="label">Continuity tester (süreklilik testi)</span></li>
+  <li data-key="Lineer voltaj regülatörü"><span class="label">Lineer voltaj regülatörü (LM7805 / AMS1117)</span></li>
+  <li data-key="USB-C breakout basit"><span class="label">USB-C breakout (basit, sadece güç)</span></li>
+  <li data-key="7-segment sürücü"><span class="label">7-segment display sürücü</span></li>
+  <li data-key="Servo tester"><span class="label">Servo tester</span></li>
+  <li data-key="IR remote receiver"><span class="label">IR remote receiver breakout</span></li>
+  <li data-key="Solenoid sürücü"><span class="label">Solenoid sürücü</span></li>
+  <li data-key="EL wire inverter"><span class="label">EL wire inverter (küçük)</span></li>
+</ul>
+
+<h2 class="level-2">🟡 Seviye 2 — Orta-Kolay</h2>
+<p class="level-desc">SMD'ye giriş, çok bileşenli devreler, basit güç yönetimi.</p>
+<ul data-level="2" class="task-list">
+  <li data-key="Buck converter"><span class="label">Buck converter breakout (MP1584 / LM2596)</span></li>
+  <li data-key="Boost converter"><span class="label">Boost converter breakout</span></li>
+  <li data-key="TP4056"><span class="label">TP4056 + DW01 Li-ion şarj & koruma kartı</span></li>
+  <li data-key="LM386 amp"><span class="label">Op-amp ses amplifikatörü (LM386)</span></li>
+  <li data-key="Aktif filtre"><span class="label">Aktif filtre kartı (low-pass / band-pass)</span></li>
+  <li data-key="Mikrofon preamp"><span class="label">Mikrofon preamp</span></li>
+  <li data-key="Wien bridge"><span class="label">Wien bridge osilatör</span></li>
+  <li data-key="Sample hold"><span class="label">Sample &amp; hold devresi</span></li>
+  <li data-key="Shift register LED"><span class="label">Shift register LED bar (74HC595)</span></li>
+  <li data-key="Binary counter"><span class="label">Binary counter göstergesi</span></li>
+  <li data-key="Rotary encoder"><span class="label">Rotary encoder breakout</span></li>
+  <li data-key="Cap touch slider"><span class="label">Capacitive touch slider</span></li>
+  <li data-key="Level converter"><span class="label">Logic level converter</span></li>
+  <li data-key="USB-UART"><span class="label">USB-UART köprüsü (CH340 / CP2102)</span></li>
+  <li data-key="DRV8833"><span class="label">H-bridge motor sürücü (DRV8833)</span></li>
+  <li data-key="A4988"><span class="label">Step motor sürücü (A4988 klonu)</span></li>
+  <li data-key="WS2812B"><span class="label">WS2812B LED matrix</span></li>
+  <li data-key="OLED breakout"><span class="label">OLED breakout</span></li>
+  <li data-key="Volume kontrol"><span class="label">Rotary encoder volume kontrol</span></li>
+  <li data-key="TEA5767"><span class="label">FM radyo alıcısı (TEA5767)</span></li>
+  <li data-key="PD trigger"><span class="label">PD trigger USB-C breakout</span></li>
+</ul>
+
+<h2 class="level-3">🟠 Seviye 3 — Orta-İleri</h2>
+<p class="level-desc">Mikrodenetleyici tasarımı, switching layout, çok sensörlü sistemler.</p>
+<ul data-level="3" class="task-list">
+  <li data-key="ATtiny85 dev"><span class="label">ATtiny85 dev board (ISP header, decoupling)</span></li>
+  <li data-key="ATmega328"><span class="label">ATmega328 Arduino klonu</span></li>
+  <li data-key="ESP32 dev"><span class="label">ESP8266 / ESP32 dev board (anten clearance dahil)</span></li>
+  <li data-key="RP2040"><span class="label">RP2040 minimum sistem</span></li>
+  <li data-key="STM32 blue pill"><span class="label">STM32 "blue pill" klonu</span></li>
+  <li data-key="CH32V003"><span class="label">CH32V003 (RISC-V) dev board</span></li>
+  <li data-key="RPi HAT"><span class="label">Raspberry Pi HAT (GPIO + EEPROM)</span></li>
+  <li data-key="I2C sensör hub"><span class="label">I2C sensör hub (BME280 + MPU6050 + OLED)</span></li>
+  <li data-key="Ultrasonik"><span class="label">Ultrasonik mesafe modülü</span></li>
+  <li data-key="HX711"><span class="label">HX711 + load cell breakout</span></li>
+  <li data-key="Geiger"><span class="label">Geiger sayacı (HV üreteç dahil)</span></li>
+  <li data-key="Nixie"><span class="label">Nixie tube sürücü (HV switching)</span></li>
+  <li data-key="Charge pump"><span class="label">Negatif voltaj üreteci (charge pump)</span></li>
+  <li data-key="Solar harvester"><span class="label">Solar harvester (panel + supercap + MPPT)</span></li>
+  <li data-key="Theremin"><span class="label">Theremin</span></li>
+  <li data-key="VCO synth"><span class="label">VCO/VCA synth modülü</span></li>
+  <li data-key="POV display"><span class="label">POV (persistence of vision) display</span></li>
+  <li data-key="nRF24L01"><span class="label">nRF24L01 breakout (RF layout)</span></li>
+  <li data-key="BT audio"><span class="label">Bluetooth audio receiver</span></li>
+  <li data-key="IR transceiver"><span class="label">IR transceiver modülü</span></li>
+  <li data-key="E-paper"><span class="label">E-paper interface kartı</span></li>
+  <li data-key="Dijital kilit"><span class="label">Dijital kasa kilidi (D flip-flop tabanlı)</span></li>
+  <li data-key="ESR meter"><span class="label">ESR meter</span></li>
+  <li data-key="Bench PSU panel"><span class="label">Bench power supply ön panel</span></li>
+</ul>
+
+<h2 class="level-4">🔴 Seviye 4 — İleri</h2>
+<p class="level-desc">4 katman, mixed-signal, RF, yüksek hız — profesyonel PCB tasarımına geçiş.</p>
+<ul data-level="4" class="task-list">
+  <li data-key="LoRa"><span class="label">LoRa modül kartı (RF tasarım)</span></li>
+  <li data-key="Kamera interface"><span class="label">Kamera interface kartı (MIPI / parallel)</span></li>
+  <li data-key="BLDC ESC"><span class="label">BLDC ESC (kapalı çevrim akım kontrolü)</span></li>
+  <li data-key="Tesla coil"><span class="label">Tesla coil sürücü (yüksek frekans + izolasyon)</span></li>
+  <li data-key="STM32 ADC"><span class="label">STM32 + analog ön uç (ADC, ayrı ground plane'ler)</span></li>
+  <li data-key="4-layer mixed"><span class="label">4-layer mixed-signal kart (DAC + filtre + MCU)</span></li>
+  <li data-key="Class-D"><span class="label">Class-D amplifikatör</span></li>
+  <li data-key="Switching PSU"><span class="label">Switching bench power supply (programmable)</span></li>
+  <li data-key="Hot air"><span class="label">Hot air rework station kontrol kartı</span></li>
+  <li data-key="Reflow"><span class="label">Reflow fırın kontrolcü (PID + termokupul)</span></li>
+  <li data-key="FPGA"><span class="label">FPGA breakout (iCE40 / Tang Nano)</span></li>
+  <li data-key="USB hub"><span class="label">USB hub (USB 2.0)</span></li>
+  <li data-key="Ethernet PHY"><span class="label">Ethernet PHY breakout</span></li>
+</ul>
+
+<div class="notes-footer">
+  <h3>📝 Notlar</h3>
+  <ul>
+    <li>Her projenin sağındaki <strong>"📝 Notlar"</strong> butonuna tıklayarak detay yazabilir ve fotoğraf ekleyebilirsin</li>
+    <li>Notlar markdown destekler: <code>**kalın**</code>, <code>*italik*</code>, <code>`kod`</code>, <code>### başlık</code>, <code>- liste</code>, <code>[link](url)</code></li>
+    <li>Fotoğraflar otomatik olarak 1200px'e küçültülür ve JPEG'e çevrilir (yer tasarrufu için)</li>
+    <li><strong>Önemli:</strong> Periyodik olarak "Yedek İndir" ile JSON yedek al — tarayıcı verisi silinirse her şey kaybolur</li>
+    <li>Tarayıcı localStorage'ı tipik olarak ~5-10 MB kapasiteye sahip. Çok fazla resim eklersen dolabilir</li>
+  </ul>
+</div>
+
+<!-- Lightbox -->
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()">×</button>
+  <img id="lightboxImg" src="" alt="">
+  <div class="lightbox-caption" id="lightboxCaption"></div>
+</div>
+
+<script>
+  const STORAGE_KEY = 'pcb_routine_progress_v2';
+  const MAX_IMAGE_DIM = 1200;
+
+  function loadState() {
+    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
+    catch { return {}; }
+  }
+  function saveState(state) {
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+    catch (e) {
+      alert('Depolama alanı doldu! Yedek alıp bazı resimleri silmen gerekebilir.');
+      throw e;
+    }
+  }
+  function getTaskData(key) {
+    const state = loadState();
+    return state[key] || { done: false, date: null, notes: '', images: [] };
+  }
+  function setTaskData(key, data) {
+    const state = loadState();
+    state[key] = data;
+    saveState(state);
+  }
+
+  // ─── Minimal Markdown ───────────────────────────
+  function renderMarkdown(text) {
+    if (!text) return '';
+    let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    html = html.replace(/```([\s\S]*?)```/g, (m, c) => '<pre><code>' + c + '</code></pre>');
+    html = html.replace(/`([^`\n]+)`/g, '<code>$1</code>');
+    html = html.replace(/^### (.+)$/gm, '<h4>$1</h4>');
+    html = html.replace(/^## (.+)$/gm, '<h3>$1</h3>');
+    html = html.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+    html = html.replace(/\*([^*\n]+)\*/g, '<em>$1</em>');
+    html = html.replace(/^- (.+)$/gm, '<li>$1</li>');
+    html = html.replace(/(<li>.*?<\/li>\n?)+/g, m => '<ul>' + m + '</ul>');
+    html = html.replace(/\[([^\]]+)\]\((https?:\/\/[^\)]+)\)/g,
+      '<a href="$2" target="_blank" rel="noopener">$1</a>');
+    html = html.replace(/\n\n+/g, '</p><p>');
+    html = html.replace(/\n/g, '<br>');
+    return '<p>' + html + '</p>';
+  }
+
+  // ─── Image resize ───────────────────────────────
+  function resizeImage(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('Dosya okunamadı'));
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('Resim yüklenemedi'));
+        img.onload = () => {
+          let { width, height } = img;
+          if (width > MAX_IMAGE_DIM || height > MAX_IMAGE_DIM) {
+            const ratio = Math.min(MAX_IMAGE_DIM / width, MAX_IMAGE_DIM / height);
+            width = Math.round(width * ratio);
+            height = Math.round(height * ratio);
+          }
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          canvas.getContext('2d').drawImage(img, 0, 0, width, height);
+          resolve(canvas.toDataURL('image/jpeg', 0.85));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  async function addImage(key, file) {
+    try {
+      const dataUrl = await resizeImage(file);
+      const caption = prompt('Bu resim için kısa bir açıklama (boş bırakabilirsin):', '') || '';
+      const data = getTaskData(key);
+      data.images = data.images || [];
+      data.images.push({ src: dataUrl, caption: caption, added: new Date().toISOString() });
+      setTaskData(key, data);
+      renderImages(key);
+      updateExpandButton(key);
+    } catch (err) {
+      alert('Resim yüklenemedi: ' + err.message);
+    }
+  }
+
+  function deleteImage(key, index) {
+    if (!confirm('Bu resim silinsin mi?')) return;
+    const data = getTaskData(key);
+    data.images.splice(index, 1);
+    setTaskData(key, data);
+    renderImages(key);
+    updateExpandButton(key);
+  }
+
+  function renderImages(key) {
+    const grid = document.querySelector(`li[data-key="${CSS.escape(key)}"] .image-grid`);
+    if (!grid) return;
+    const data = getTaskData(key);
+    grid.innerHTML = '';
+    (data.images || []).forEach((img, i) => {
+      const tile = document.createElement('div');
+      tile.className = 'image-tile';
+      const safeCaption = (img.caption || '').replace(/</g, '&lt;');
+      tile.innerHTML = `
+        <img src="${img.src}" alt="">
+        ${img.caption ? `<div class="img-caption">${safeCaption}</div>` : ''}
+        <button class="delete-img" title="Sil">×</button>
+      `;
+      tile.querySelector('img').addEventListener('click', () => openLightbox(img.src, img.caption));
+      tile.querySelector('.delete-img').addEventListener('click', (e) => {
+        e.stopPropagation();
+        deleteImage(key, i);
+      });
+      grid.appendChild(tile);
+    });
+  }
+
+  // ─── Lightbox ───────────────────────────────────
+  function openLightbox(src, caption) {
+    document.getElementById('lightboxImg').src = src;
+    document.getElementById('lightboxCaption').textContent = caption || '';
+    document.getElementById('lightbox').classList.add('open');
+  }
+  function closeLightbox(e) {
+    if (e && e.target.tagName === 'IMG') return;
+    document.getElementById('lightbox').classList.remove('open');
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeLightbox();
+  });
+
+  // ─── Blog section ───────────────────────────────
+  function buildBlogSection(li, key) {
+    const data = getTaskData(key);
+    const section = document.createElement('div');
+    section.className = 'blog-section';
+    section.innerHTML = `
+      <h4>📝 Notlar</h4>
+      <div class="editor-tabs">
+        <button type="button" class="tab-btn active" data-tab="write">Yaz</button>
+        <button type="button" class="tab-btn" data-tab="preview">Önizle</button>
+      </div>
+      <textarea class="notes-editor" placeholder="Bu proje hakkında notlarını buraya yaz...&#10;&#10;Örn: Ne yaptım, ne öğrendim, hangi hatalar oldu, sonraki sefer ne yapacağım..."></textarea>
+      <div class="notes-preview" style="display:none"></div>
+      <div class="notes-hint">Otomatik kaydedilir • Markdown: **kalın** *italik* \`kod\` ### başlık - liste [link](url)</div>
+
+      <div class="images-area">
+        <h4>📸 Fotoğraflar</h4>
+        <div class="image-controls">
+          <button type="button" class="add-image-btn">+ Resim Ekle</button>
+          <input type="file" accept="image/*" multiple style="display:none">
+        </div>
+        <div class="image-grid"></div>
+      </div>
+    `;
+    li.appendChild(section);
+
+    const editor = section.querySelector('.notes-editor');
+    const preview = section.querySelector('.notes-preview');
+    editor.value = data.notes || '';
+
+    section.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', (e) => {
+        e.stopPropagation();
+        section.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        if (btn.dataset.tab === 'preview') {
+          preview.innerHTML = renderMarkdown(editor.value);
+          preview.style.display = 'block';
+          editor.style.display = 'none';
+        } else {
+          preview.style.display = 'none';
+          editor.style.display = 'block';
+        }
+      });
+    });
+
+    let saveTimer;
+    editor.addEventListener('input', () => {
+      clearTimeout(saveTimer);
+      saveTimer = setTimeout(() => {
+        const d = getTaskData(key);
+        d.notes = editor.value;
+        setTaskData(key, d);
+        updateExpandButton(key);
+      }, 400);
+    });
+
+    const fileInput = section.querySelector('input[type="file"]');
+    section.querySelector('.add-image-btn').addEventListener('click', (e) => {
+      e.stopPropagation();
+      fileInput.click();
+    });
+    fileInput.addEventListener('change', async (e) => {
+      for (const file of e.target.files) {
+        await addImage(key, file);
+      }
+      fileInput.value = '';
+    });
+
+    renderImages(key);
+  }
+
+  function updateExpandButton(key) {
+    const data = getTaskData(key);
+    const btn = document.querySelector(`li[data-key="${CSS.escape(key)}"] .expand-btn`);
+    if (!btn) return;
+    const hasNotes = data.notes && data.notes.trim();
+    const imgCount = (data.images || []).length;
+    const hasContent = hasNotes || imgCount > 0;
+    btn.classList.toggle('has-content', hasContent);
+    btn.textContent = imgCount > 0
+      ? `📝 Notlar (${imgCount} 📸)`
+      : '📝 Notlar';
+  }
+
+  // ─── Task build ─────────────────────────────────
+  function buildTask(li) {
+    const key = li.dataset.key;
+    const labelHTML = li.querySelector('.label').innerHTML;
+    const data = getTaskData(key);
+
+    li.classList.add('task');
+    if (data.done) li.classList.add('done');
+    li.innerHTML = '';
+
+    const header = document.createElement('div');
+    header.className = 'task-header';
+    header.innerHTML = `
+      <input type="checkbox" ${data.done ? 'checked' : ''}>
+      <span class="label">${labelHTML}</span>
+      <span class="date">${data.done && data.date ? '✓ ' + data.date : ''}</span>
+      <button type="button" class="expand-btn">📝 Notlar</button>
+    `;
+    li.appendChild(header);
+
+    const checkbox = header.querySelector('input');
+    const dateEl = header.querySelector('.date');
+    const expandBtn = header.querySelector('.expand-btn');
+
+    const toggleDone = () => {
+      const d = getTaskData(key);
+      if (checkbox.checked) {
+        d.done = true;
+        d.date = new Date().toLocaleDateString('tr-TR');
+        li.classList.add('done');
+        dateEl.textContent = '✓ ' + d.date;
+      } else {
+        d.done = false;
+        d.date = null;
+        li.classList.remove('done');
+        dateEl.textContent = '';
+      }
+      setTaskData(key, d);
+      updateProgress();
+    };
+    checkbox.addEventListener('change', toggleDone);
+    checkbox.addEventListener('click', e => e.stopPropagation());
+
+    buildBlogSection(li, key);
+    const blogSection = li.querySelector('.blog-section');
+
+    expandBtn.addEventListener('click', (e) => {
+      e.stopPropagation();
+      blogSection.classList.toggle('open');
+    });
+
+    header.addEventListener('click', (e) => {
+      if (e.target === checkbox || e.target === expandBtn) return;
+      checkbox.checked = !checkbox.checked;
+      toggleDone();
+    });
+
+    updateExpandButton(key);
+  }
+
+  function updateProgress() {
+    const all = document.querySelectorAll('li.task').length;
+    const done = document.querySelectorAll('li.task.done').length;
+    const pct = all ? (done / all) * 100 : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent =
+      done + ' / ' + all + ' tamamlandı (' + pct.toFixed(0) + '%)';
+  }
+
+  // ─── Reset / Export / Import ────────────────────
+  function resetAll() {
+    if (!confirm('TÜM ilerleme, notlar ve fotoğraflar silinecek. Emin misin?')) return;
+    if (!confirm('Gerçekten emin misin? Bu işlem geri alınamaz.')) return;
+    localStorage.removeItem(STORAGE_KEY);
+    location.reload();
+  }
+  function exportData() {
+    const data = JSON.stringify(loadState(), null, 2);
+    const blob = new Blob([data], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'pcb_rutini_yedek_' + new Date().toISOString().split('T')[0] + '.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  }
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const data = JSON.parse(e.target.result);
+        if (!confirm('Mevcut veriler üzerine yazılacak. Devam edilsin mi?')) return;
+        saveState(data);
+        location.reload();
+      } catch {
+        alert('Geçersiz dosya');
+      }
+    };
+    reader.readAsText(file);
+  }
+
+  // ─── Init ───────────────────────────────────────
+  document.querySelectorAll('li[data-key]').forEach(buildTask);
+  updateProgress();
+</script>
+
+</body>
+</html>
