@@ -2484,6 +2484,30 @@
 		(layer "Edge.Cuts")
 		(uuid "f8c44396-d62b-4792-ba22-5814a76b0338")
 	)
+	(gr_text "VCC\n"
+		(at 131.675 91.754762 90)
+		(layer "F.SilkS")
+		(uuid "c2ee91e3-b16c-4ad4-aca8-1ea675edc700")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
+	(gr_text "GND"
+		(at 128.65 91.85 90)
+		(layer "F.SilkS")
+		(uuid "ed63e876-a16d-491b-9f5a-4260ac8bdaff")
+		(effects
+			(font
+				(size 1 1)
+				(thickness 0.1)
+			)
+			(justify left bottom)
+		)
+	)
 	(segment
 		(start 136.625 98.6875)
 		(end 138.3125 98.6875)

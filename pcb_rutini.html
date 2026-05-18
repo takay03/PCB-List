@@ -34,7 +34,28 @@
     height: 100%;
     transition: width 0.3s ease;
   }
-  .progress-text { font-size: 0.9rem; color: #8b949e; margin-bottom: 2rem; }
+  .progress-text { font-size: 0.9rem; color: #8b949e; margin-bottom: 0.5rem; }
+  .status-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    font-size: 0.75rem;
+    color: #8b949e;
+    margin-bottom: 1.5rem;
+    padding: 0.5rem 0.75rem;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+  }
+  .status-legend .dot {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.3rem;
+    vertical-align: middle;
+  }
+  .status-legend span { white-space: nowrap; }
   h2 {
     margin-top: 2.5rem;
     padding: 0.5rem 1rem;
@@ -62,10 +83,21 @@
     border-radius: 6px;
     transition: border-color 0.2s;
     overflow: hidden;
+    border-left-width: 4px;
   }
   li.task:hover { border-color: #58a6ff; }
-  li.task.done { background: rgba(46, 160, 67, 0.1); border-color: rgba(46, 160, 67, 0.4); }
-  li.task.done .label { text-decoration: line-through; color: #8b949e; }
+
+  /* Status-based left border colors */
+  li.task[data-status="0"] { border-left-color: #30363d; }
+  li.task[data-status="1"] { border-left-color: #58a6ff; }
+  li.task[data-status="2"] { border-left-color: #a371f7; }
+  li.task[data-status="3"] { border-left-color: #d29922; }
+  li.task[data-status="4"] {
+    border-left-color: #2ea043;
+    background: rgba(46, 160, 67, 0.1);
+  }
+  li.task[data-status="4"] .label { color: #8b949e; }
+
   .task-header {
     display: flex;
     align-items: center;
@@ -73,17 +105,32 @@
     cursor: pointer;
     user-select: none;
     gap: 0.5rem;
+    flex-wrap: wrap;
   }
   .task-header:hover { background: #1c2128; }
-  input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+  .label { flex: 1; min-width: 200px; }
+
+  .status-select {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    border-radius: 4px;
+    padding: 0.25rem 0.5rem;
+    font-size: 0.8rem;
     cursor: pointer;
-    accent-color: #2ea043;
-    flex-shrink: 0;
+    font-family: inherit;
   }
-  .label { flex: 1; }
-  .date { font-size: 0.8rem; color: #8b949e; font-style: italic; }
+  .status-select:hover { border-color: #58a6ff; }
+  .status-select:focus { outline: none; border-color: #58a6ff; }
+
+  /* Status select coloring */
+  .status-select[data-status="0"] { color: #8b949e; }
+  .status-select[data-status="1"] { color: #58a6ff; border-color: rgba(88, 166, 255, 0.4); }
+  .status-select[data-status="2"] { color: #a371f7; border-color: rgba(163, 113, 247, 0.4); }
+  .status-select[data-status="3"] { color: #d29922; border-color: rgba(210, 153, 34, 0.4); }
+  .status-select[data-status="4"] { color: #2ea043; border-color: rgba(46, 160, 67, 0.4); }
+
+  .date { font-size: 0.75rem; color: #8b949e; font-style: italic; white-space: nowrap; }
   .expand-btn {
     background: transparent;
     border: 1px solid #30363d;
@@ -136,7 +183,7 @@
     min-height: 120px;
   }
   .notes-preview:empty::before {
-    content: 'Henüz not yok. "Yaz" sekmesinden eklemeye başla.';
+    content: 'Henüz not yok.';
     color: #6e7681;
     font-style: italic;
   }
@@ -176,6 +223,17 @@
     border-bottom: none;
   }
   .tab-btn.active { background: #1c2128; color: #e6edf3; border-color: #58a6ff; }
+
+  /* Status history */
+  .status-history {
+    font-size: 0.75rem;
+    color: #6e7681;
+    margin-bottom: 1rem;
+    padding: 0.5rem 0.75rem;
+    background: #161b22;
+    border-radius: 4px;
+  }
+  .status-history-item { display: block; padding: 0.15rem 0; }
 
   /* Images */
   .images-area { margin-top: 1.5rem; }
@@ -326,10 +384,18 @@
 <body>
 
 <h1>🔧 Aylık PCB Tasarım Rutini</h1>
-<p class="intro">Her ay listeden bir proje seç ve tamamladığında işaretle. Her görevin altına notlar ve fotoğraflar ekleyebilirsin.</p>
+<p class="intro">Her ay listeden bir proje seç. Her görev için durumu (status) güncelle, notlar ve fotoğraflar ekle.</p>
 
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
 <div class="progress-text" id="progressText">0 / 0 tamamlandı</div>
+
+<div class="status-legend">
+  <span><span class="dot" style="background:#30363d"></span>Başlanmadı</span>
+  <span><span class="dot" style="background:#58a6ff"></span>Şematik tamamlandı</span>
+  <span><span class="dot" style="background:#a371f7"></span>PCB tasarımı tamamlandı</span>
+  <span><span class="dot" style="background:#d29922"></span>Sipariş verildi</span>
+  <span><span class="dot" style="background:#2ea043"></span>Testleri tamamlandı</span>
+</div>
 
 <div class="controls">
   <button class="action" onclick="exportData()">📥 Yedek İndir (JSON)</button>
@@ -431,11 +497,11 @@
 <div class="notes-footer">
   <h3>📝 Notlar</h3>
   <ul>
-    <li>Her projenin sağındaki <strong>"📝 Notlar"</strong> butonuna tıklayarak detay yazabilir ve fotoğraf ekleyebilirsin</li>
-    <li>Notlar markdown destekler: <code>**kalın**</code>, <code>*italik*</code>, <code>`kod`</code>, <code>### başlık</code>, <code>- liste</code>, <code>[link](url)</code></li>
-    <li>Fotoğraflar otomatik olarak 1200px'e küçültülür ve JPEG'e çevrilir (yer tasarrufu için)</li>
+    <li><strong>Status'lar:</strong> her görevdeki dropdown ile aşamayı güncelle. Sol kenar rengi status'a göre değişir, geçmiş tarihleri "📝 Notlar" panelinde görebilirsin</li>
+    <li><strong>İlerleme çubuğu</strong> sadece "Testleri tamamlandı" status'una geçen projeleri sayar</li>
+    <li><strong>Notlar markdown destekler:</strong> <code>**kalın**</code>, <code>*italik*</code>, <code>`kod`</code>, <code>### başlık</code>, <code>- liste</code>, <code>[link](url)</code></li>
+    <li><strong>Fotoğraflar</strong> otomatik olarak 1200px'e küçültülür ve JPEG'e çevrilir</li>
     <li><strong>Önemli:</strong> Periyodik olarak "Yedek İndir" ile JSON yedek al — tarayıcı verisi silinirse her şey kaybolur</li>
-    <li>Tarayıcı localStorage'ı tipik olarak ~5-10 MB kapasiteye sahip. Çok fazla resim eklersen dolabilir</li>
   </ul>
 </div>
 
@@ -447,8 +513,17 @@
 </div>
 
 <script>
-  const STORAGE_KEY = 'pcb_routine_progress_v2';
+  const STORAGE_KEY = 'pcb_routine_progress_v3';
   const MAX_IMAGE_DIM = 1200;
+
+  const STATUSES = [
+    { value: 0, label: 'Başlanmadı' },
+    { value: 1, label: 'Şematik tamamlandı' },
+    { value: 2, label: 'PCB tasarımı tamamlandı' },
+    { value: 3, label: 'Sipariş verildi' },
+    { value: 4, label: 'Testleri tamamlandı' }
+  ];
+  const DONE_STATUS = 4;
 
   function loadState() {
     try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
@@ -461,9 +536,10 @@
       throw e;
     }
   }
+
   function getTaskData(key) {
     const state = loadState();
-    return state[key] || { done: false, date: null, notes: '', images: [] };
+    return state[key] || { status: 0, statusHistory: [], notes: '', images: [] };
   }
   function setTaskData(key, data) {
     const state = loadState();
@@ -471,7 +547,34 @@
     saveState(state);
   }
 
-  // ─── Minimal Markdown ───────────────────────────
+  // ─── Migration from v2 (done/date) ─────────────
+  function migrateV2() {
+    const oldKey = 'pcb_routine_progress_v2';
+    const oldRaw = localStorage.getItem(oldKey);
+    const newRaw = localStorage.getItem(STORAGE_KEY);
+    if (!oldRaw || newRaw) return;
+    try {
+      const oldState = JSON.parse(oldRaw);
+      const newState = {};
+      for (const key in oldState) {
+        const t = oldState[key];
+        newState[key] = {
+          status: t.done ? DONE_STATUS : 0,
+          statusHistory: t.done && t.date
+            ? [{ status: DONE_STATUS, date: t.date }]
+            : [],
+          notes: t.notes || '',
+          images: t.images || []
+        };
+      }
+      saveState(newState);
+    } catch (e) {
+      console.warn('v2 migration failed', e);
+    }
+  }
+  migrateV2();
+
+  // ─── Markdown ───────────────────────────────────
   function renderMarkdown(text) {
     if (!text) return '';
     let html = text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -490,7 +593,7 @@
     return '<p>' + html + '</p>';
   }
 
-  // ─── Image resize ───────────────────────────────
+  // ─── Image handling ─────────────────────────────
   function resizeImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -578,12 +681,32 @@
     if (e.key === 'Escape') closeLightbox();
   });
 
+  // ─── Status history render ──────────────────────
+  function renderStatusHistory(key) {
+    const data = getTaskData(key);
+    const container = document.querySelector(`li[data-key="${CSS.escape(key)}"] .status-history`);
+    if (!container) return;
+    const history = data.statusHistory || [];
+    if (history.length === 0) {
+      container.innerHTML = '<em>Henüz status değişikliği yok.</em>';
+      return;
+    }
+    container.innerHTML = '<strong>Durum geçmişi:</strong>' +
+      history.map(h => {
+        const label = STATUSES.find(s => s.value === h.status)?.label || '?';
+        return `<span class="status-history-item">→ ${label} <em>(${h.date})</em></span>`;
+      }).join('');
+  }
+
   // ─── Blog section ───────────────────────────────
   function buildBlogSection(li, key) {
     const data = getTaskData(key);
     const section = document.createElement('div');
     section.className = 'blog-section';
     section.innerHTML = `
+      <h4>📊 Durum Geçmişi</h4>
+      <div class="status-history"></div>
+
       <h4>📝 Notlar</h4>
       <div class="editor-tabs">
         <button type="button" class="tab-btn active" data-tab="write">Yaz</button>
@@ -648,6 +771,7 @@
     });
 
     renderImages(key);
+    renderStatusHistory(key);
   }
 
   function updateExpandButton(key) {
@@ -670,41 +794,47 @@
     const data = getTaskData(key);
 
     li.classList.add('task');
-    if (data.done) li.classList.add('done');
+    li.dataset.status = data.status;
     li.innerHTML = '';
+
+    const optionsHTML = STATUSES.map(s =>
+      `<option value="${s.value}" ${s.value === data.status ? 'selected' : ''}>${s.label}</option>`
+    ).join('');
+
+    const lastChange = (data.statusHistory && data.statusHistory.length)
+      ? data.statusHistory[data.statusHistory.length - 1].date
+      : '';
 
     const header = document.createElement('div');
     header.className = 'task-header';
     header.innerHTML = `
-      <input type="checkbox" ${data.done ? 'checked' : ''}>
       <span class="label">${labelHTML}</span>
-      <span class="date">${data.done && data.date ? '✓ ' + data.date : ''}</span>
+      <select class="status-select" data-status="${data.status}">${optionsHTML}</select>
+      <span class="date">${lastChange ? '⏱ ' + lastChange : ''}</span>
       <button type="button" class="expand-btn">📝 Notlar</button>
     `;
     li.appendChild(header);
 
-    const checkbox = header.querySelector('input');
+    const select = header.querySelector('.status-select');
     const dateEl = header.querySelector('.date');
     const expandBtn = header.querySelector('.expand-btn');
 
-    const toggleDone = () => {
+    select.addEventListener('click', e => e.stopPropagation());
+    select.addEventListener('change', () => {
+      const newStatus = parseInt(select.value, 10);
       const d = getTaskData(key);
-      if (checkbox.checked) {
-        d.done = true;
-        d.date = new Date().toLocaleDateString('tr-TR');
-        li.classList.add('done');
-        dateEl.textContent = '✓ ' + d.date;
-      } else {
-        d.done = false;
-        d.date = null;
-        li.classList.remove('done');
-        dateEl.textContent = '';
-      }
+      if (newStatus === d.status) return;
+      const today = new Date().toLocaleDateString('tr-TR');
+      d.statusHistory = d.statusHistory || [];
+      d.statusHistory.push({ status: newStatus, date: today });
+      d.status = newStatus;
       setTaskData(key, d);
+      li.dataset.status = newStatus;
+      select.dataset.status = newStatus;
+      dateEl.textContent = '⏱ ' + today;
+      renderStatusHistory(key);
       updateProgress();
-    };
-    checkbox.addEventListener('change', toggleDone);
-    checkbox.addEventListener('click', e => e.stopPropagation());
+    });
 
     buildBlogSection(li, key);
     const blogSection = li.querySelector('.blog-section');
@@ -715,9 +845,8 @@
     });
 
     header.addEventListener('click', (e) => {
-      if (e.target === checkbox || e.target === expandBtn) return;
-      checkbox.checked = !checkbox.checked;
-      toggleDone();
+      if (e.target === select || e.target === expandBtn || select.contains(e.target)) return;
+      blogSection.classList.toggle('open');
     });
 
     updateExpandButton(key);
@@ -725,11 +854,13 @@
 
   function updateProgress() {
     const all = document.querySelectorAll('li.task').length;
-    const done = document.querySelectorAll('li.task.done').length;
+    const done = document.querySelectorAll(`li.task[data-status="${DONE_STATUS}"]`).length;
+    const inProgress = document.querySelectorAll('li.task:not([data-status="0"]):not([data-status="' + DONE_STATUS + '"])').length;
     const pct = all ? (done / all) * 100 : 0;
     document.getElementById('progressFill').style.width = pct + '%';
+    const inProgressText = inProgress > 0 ? ` • ${inProgress} devam ediyor` : '';
     document.getElementById('progressText').textContent =
-      done + ' / ' + all + ' tamamlandı (' + pct.toFixed(0) + '%)';
+      done + ' / ' + all + ' tamamlandı (' + pct.toFixed(0) + '%)' + inProgressText;
   }
 
   // ─── Reset / Export / Import ────────────────────
