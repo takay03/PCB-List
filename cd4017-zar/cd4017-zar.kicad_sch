@@ -1539,6 +1539,214 @@
 			)
 			(embedded_fonts no)
 		)
+		(symbol "USB-C_Breakout:4090"
+			(exclude_from_sim no)
+			(in_bom yes)
+			(on_board yes)
+			(property "Reference" "U3"
+				(at 4.064 0.254 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Value" "~"
+				(at 3.81 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+				)
+			)
+			(property "Footprint" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Datasheet" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(property "Description" ""
+				(at 0 0 0)
+				(effects
+					(font
+						(size 1.27 1.27)
+					)
+					(hide yes)
+				)
+			)
+			(symbol "4090_0_1"
+				(rectangle
+					(start -6.35 -1.27)
+					(end 13.97 -13.97)
+					(stroke
+						(width 0)
+						(type default)
+					)
+					(fill
+						(type none)
+					)
+				)
+			)
+			(symbol "4090_1_1"
+				(pin output line
+					(at -8.89 -3.81 0)
+					(length 2.54)
+					(name "CC2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at -8.89 -6.35 0)
+					(length 2.54)
+					(name "SBU1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -8.89 -8.89 0)
+					(length 2.54)
+					(name "D+"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "3"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin bidirectional line
+					(at -8.89 -11.43 0)
+					(length 2.54)
+					(name "D-"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "4"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 16.51 -3.81 180)
+					(length 2.54)
+					(name "CC1"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "5"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 16.51 -6.35 180)
+					(length 2.54)
+					(name "SBU2"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "6"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 16.51 -8.89 180)
+					(length 2.54)
+					(name "VBUS"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "7"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+				(pin output line
+					(at 16.51 -11.43 180)
+					(length 2.54)
+					(name "GND"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+					(number "8"
+						(effects
+							(font
+								(size 1.27 1.27)
+							)
+						)
+					)
+				)
+			)
+			(embedded_fonts no)
+		)
 		(symbol "power:GND"
 			(power)
 			(pin_numbers
@@ -2257,6 +2465,10 @@
 		(uuid "fa589813-defa-40ad-8b1c-1bb6ceba9eda")
 	)
 	(no_connect
+		(at 237.49 34.29)
+		(uuid "2ece23ab-5e51-4416-b41e-6aa11451ae5f")
+	)
+	(no_connect
 		(at 196.85 67.31)
 		(uuid "414ff736-b4d0-4f9b-82b8-b4e970926f1c")
 	)
@@ -2265,8 +2477,28 @@
 		(uuid "55fed7ac-ee11-4e45-9d38-7ec61e2a98f3")
 	)
 	(no_connect
+		(at 262.89 29.21)
+		(uuid "70c90bd1-389e-4ab8-92f6-c741a8266d4d")
+	)
+	(no_connect
 		(at 196.85 64.77)
 		(uuid "b98d7d52-ed8f-4c62-a3fa-93295198f948")
+	)
+	(no_connect
+		(at 262.89 26.67)
+		(uuid "ba6e2f60-0bca-44d0-b3e8-8924eecb8e69")
+	)
+	(no_connect
+		(at 237.49 26.67)
+		(uuid "da90c3f6-fb71-40a1-aba1-8f041296481f")
+	)
+	(no_connect
+		(at 237.49 29.21)
+		(uuid "dfc90024-78fd-4aab-bf42-a716cf036a76")
+	)
+	(no_connect
+		(at 237.49 31.75)
+		(uuid "e2e6118a-7e2b-4fa6-a7c7-063dc1845f27")
 	)
 	(no_connect
 		(at 196.85 69.85)
@@ -4762,6 +4994,91 @@
 		)
 	)
 	(symbol
+		(lib_id "USB-C_Breakout:4090")
+		(at 246.38 22.86 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "376d96b2-3e41-4e20-84df-e19cb7b1d973")
+		(property "Reference" "U3"
+			(at 250.444 22.606 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Value" "~"
+			(at 250.19 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+			)
+		)
+		(property "Footprint" "USB-C_Breakout:4090"
+			(at 246.38 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 246.38 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 246.38 22.86 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "6"
+			(uuid "deea6b4e-709d-42dd-ae9e-e04ee1d40860")
+		)
+		(pin "8"
+			(uuid "5f7ad05c-d032-4911-974c-968e1872ea83")
+		)
+		(pin "7"
+			(uuid "6cfabcc1-2b2a-4348-9d8f-90f1307a0e10")
+		)
+		(pin "2"
+			(uuid "4e6ea8b3-fc48-4d15-b970-255080bd1b85")
+		)
+		(pin "3"
+			(uuid "fb725050-8d89-4597-a031-f37a55232e43")
+		)
+		(pin "4"
+			(uuid "5be6560b-46ac-492a-b6d1-a96abc598b91")
+		)
+		(pin "5"
+			(uuid "7a16722f-dce6-4588-81f2-adaffbfe1328")
+		)
+		(pin "1"
+			(uuid "25455ecc-e7b1-4fed-8d5e-298ea897a71e")
+		)
+		(instances
+			(project ""
+				(path "/19d241f9-6249-4119-82f2-570ba2b8e0a1"
+					(reference "U3")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "Device:D")
 		(at 186.69 124.46 180)
 		(unit 1)
@@ -4908,6 +5225,73 @@
 			(project "cd4017-zar"
 				(path "/19d241f9-6249-4119-82f2-570ba2b8e0a1"
 					(reference "#PWR013")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:VCC")
+		(at 262.89 31.75 270)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "3d572959-456d-49e0-827e-006d91b2cff4")
+		(property "Reference" "#PWR019"
+			(at 259.08 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "VCC"
+			(at 266.7 31.7499 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 262.89 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 262.89 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"VCC\""
+			(at 262.89 31.75 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "940be99d-312b-4b21-ba28-5e299dd35efd")
+		)
+		(instances
+			(project "cd4017-zar"
+				(path "/19d241f9-6249-4119-82f2-570ba2b8e0a1"
+					(reference "#PWR019")
 					(unit 1)
 				)
 			)
@@ -5416,6 +5800,73 @@
 			(project "cd4017-zar"
 				(path "/19d241f9-6249-4119-82f2-570ba2b8e0a1"
 					(reference "#PWR016")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "power:GND")
+		(at 262.89 34.29 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "5fc96581-90b9-493f-8d4f-d1b7b058324e")
+		(property "Reference" "#PWR020"
+			(at 269.24 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "GND"
+			(at 267.97 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Footprint" ""
+			(at 262.89 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" ""
+			(at 262.89 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Power symbol creates a global label with name \"GND\" , ground"
+			(at 262.89 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e46fd495-d929-4b2a-bd04-30f305aeb229")
+		)
+		(instances
+			(project "cd4017-zar"
+				(path "/19d241f9-6249-4119-82f2-570ba2b8e0a1"
+					(reference "#PWR020")
 					(unit 1)
 				)
 			)

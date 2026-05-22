@@ -1,4 +1,4 @@
-25210736109437952
+25214294641578028
 Audio_Module
 Reverb_BTDR-1H
 Digital Reverberation Unit, http://www.belton.co.kr/inc/downfile.php?seq=17&file=pdf (footprint from http://www.uk-electronic.de/PDF/BTDR-1.pdf)
@@ -13,6 +13,13 @@ audio belton reverb
 0
 7
 7
+B3SN-3012P
+SW_B3SN-3012P
+
+
+0
+4
+4
 Battery
 BatteryClip_Keystone_54_D16-19mm
 Battery clip for batteries with a diameter between 16-19 mm: https://www.keyelco.com/product.cfm/product_id/826
@@ -100491,6 +100498,13 @@ igbt diode module
 0
 25
 25
+USB-C_Breakout
+4090
+
+
+0
+8
+8
 Valve
 Valve_ECC-83-1
 Valve ECC-83-1 round pins
