@@ -20,7 +20,56 @@
     padding-bottom: 0.5rem;
     margin-bottom: 0.5rem;
   }
-  .intro { color: #8b949e; margin-bottom: 2rem; }
+  .intro { color: #8b949e; margin-bottom: 1rem; }
+
+  /* Auth bar */
+  .auth-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 0.6rem 0.9rem;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+  }
+  .auth-info { display: flex; align-items: center; gap: 0.6rem; font-size: 0.9rem; }
+  .auth-info img { width: 28px; height: 28px; border-radius: 50%; }
+  .sync-status { font-size: 0.8rem; color: #8b949e; }
+  .sync-status.saving { color: #d29922; }
+  .sync-status.saved { color: #2ea043; }
+  .sync-status.error { color: #f85149; }
+  .auth-btn {
+    background: #21262d;
+    color: #e6edf3;
+    border: 1px solid #30363d;
+    padding: 0.45rem 0.9rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.85rem;
+  }
+  .auth-btn:hover { background: #30363d; border-color: #58a6ff; }
+  .auth-btn.primary { background: #238636; border-color: #2ea043; }
+  .auth-btn.primary:hover { background: #2ea043; }
+
+  /* Login gate */
+  .login-gate {
+    text-align: center;
+    padding: 3rem 1rem;
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    margin: 2rem 0;
+  }
+  .login-gate h2 { margin-top: 0; border: none; background: none; padding: 0; display: block; }
+  .login-gate p { color: #8b949e; max-width: 460px; margin: 0.5rem auto 1.5rem; }
+
+  #appContent { display: none; }
+  #appContent.visible { display: block; }
+  .login-gate.hidden { display: none; }
+
   .progress-bar {
     background: #161b22;
     border: 1px solid #30363d;
@@ -49,8 +98,7 @@
   }
   .status-legend .dot {
     display: inline-block;
-    width: 10px;
-    height: 10px;
+    width: 10px; height: 10px;
     border-radius: 50%;
     margin-right: 0.3rem;
     vertical-align: middle;
@@ -86,16 +134,11 @@
     border-left-width: 4px;
   }
   li.task:hover { border-color: #58a6ff; }
-
-  /* Status-based left border colors */
   li.task[data-status="0"] { border-left-color: #30363d; }
   li.task[data-status="1"] { border-left-color: #58a6ff; }
   li.task[data-status="2"] { border-left-color: #a371f7; }
   li.task[data-status="3"] { border-left-color: #d29922; }
-  li.task[data-status="4"] {
-    border-left-color: #2ea043;
-    background: rgba(46, 160, 67, 0.1);
-  }
+  li.task[data-status="4"] { border-left-color: #2ea043; background: rgba(46, 160, 67, 0.1); }
   li.task[data-status="4"] .label { color: #8b949e; }
 
   .task-header {
@@ -109,6 +152,7 @@
   }
   .task-header:hover { background: #1c2128; }
   .label { flex: 1; min-width: 200px; }
+  .rating-badge { font-size: 0.8rem; color: #e3b341; white-space: nowrap; }
 
   .status-select {
     background: #21262d;
@@ -122,8 +166,6 @@
   }
   .status-select:hover { border-color: #58a6ff; }
   .status-select:focus { outline: none; border-color: #58a6ff; }
-
-  /* Status select coloring */
   .status-select[data-status="0"] { color: #8b949e; }
   .status-select[data-status="1"] { color: #58a6ff; border-color: rgba(88, 166, 255, 0.4); }
   .status-select[data-status="2"] { color: #a371f7; border-color: rgba(163, 113, 247, 0.4); }
@@ -145,7 +187,6 @@
   .expand-btn:hover { color: #58a6ff; border-color: #58a6ff; }
   .expand-btn.has-content { color: #2ea043; border-color: rgba(46, 160, 67, 0.4); }
 
-  /* Blog section */
   .blog-section {
     display: none;
     padding: 1rem 1.25rem;
@@ -161,9 +202,44 @@
     text-transform: uppercase;
     letter-spacing: 0.5px;
   }
-  .notes-editor {
+  .blog-section h4:not(:first-child) { margin-top: 1.5rem; }
+
+  .eval-panel {
+    background: rgba(227, 179, 65, 0.06);
+    border: 1px solid rgba(227, 179, 65, 0.25);
+    border-radius: 8px;
+    padding: 1rem 1.25rem;
+    margin-bottom: 0.5rem;
+  }
+  .eval-panel.locked { opacity: 0.55; }
+  .eval-locked-msg { font-size: 0.8rem; color: #8b949e; font-style: italic; }
+  .eval-title {
+    display: flex; align-items: center; gap: 0.5rem;
+    margin: 0 0 0.75rem 0 !important;
+    color: #e3b341 !important;
+  }
+  .rating-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 1rem; padding: 0.4rem 0; flex-wrap: wrap;
+  }
+  .rating-label { font-size: 0.9rem; color: #e6edf3; flex: 1; min-width: 160px; }
+  .rating-label small { display: block; color: #6e7681; font-size: 0.72rem; font-weight: normal; }
+  .stars { display: inline-flex; gap: 0.15rem; font-size: 1.4rem; line-height: 1; }
+  .star { cursor: pointer; color: #30363d; transition: color 0.15s, transform 0.1s; user-select: none; }
+  .eval-panel.locked .star { cursor: default; }
+  .star.filled { color: #e3b341; }
+  .star:hover { transform: scale(1.15); }
+  .star.clear-star { font-size: 0.85rem; color: #6e7681; margin-left: 0.3rem; align-self: center; }
+  .star.clear-star:hover { color: #f85149; transform: none; }
+  .eval-summary {
+    margin-top: 0.75rem; padding-top: 0.75rem;
+    border-top: 1px solid rgba(227, 179, 65, 0.2);
+    font-size: 0.85rem; color: #8b949e;
+  }
+  .eval-summary strong { color: #e3b341; }
+
+  .thoughts-editor, .notes-editor {
     width: 100%;
-    min-height: 120px;
     background: #161b22;
     color: #e6edf3;
     border: 1px solid #30363d;
@@ -174,347 +250,281 @@
     line-height: 1.5;
     resize: vertical;
   }
-  .notes-editor:focus { outline: none; border-color: #58a6ff; }
+  .thoughts-editor { min-height: 80px; margin-top: 0.5rem; }
+  .notes-editor { min-height: 120px; }
+  .thoughts-editor:focus, .notes-editor:focus { outline: none; border-color: #58a6ff; }
   .notes-preview {
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    padding: 0.75rem 1rem;
-    min-height: 120px;
+    background: #161b22; border: 1px solid #30363d; border-radius: 6px;
+    padding: 0.75rem 1rem; min-height: 120px;
   }
-  .notes-preview:empty::before {
-    content: 'Henüz not yok.';
-    color: #6e7681;
-    font-style: italic;
-  }
+  .notes-preview:empty::before { content: 'Henüz not yok.'; color: #6e7681; font-style: italic; }
   .notes-preview p { margin: 0.4rem 0; }
-  .notes-preview code {
-    background: #1c2128;
-    padding: 0.1rem 0.4rem;
-    border-radius: 3px;
-    font-size: 0.9em;
-  }
-  .notes-preview pre {
-    background: #1c2128;
-    padding: 0.75rem;
-    border-radius: 4px;
-    overflow-x: auto;
-  }
+  .notes-preview code { background: #1c2128; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
+  .notes-preview pre { background: #1c2128; padding: 0.75rem; border-radius: 4px; overflow-x: auto; }
   .notes-preview h3, .notes-preview h4 { margin: 0.8rem 0 0.4rem 0; }
   .notes-preview a { color: #58a6ff; }
-  .notes-hint {
-    font-size: 0.75rem;
-    color: #6e7681;
-    margin-top: 0.25rem;
-  }
-  .editor-tabs {
-    display: flex;
-    gap: 0.25rem;
-    margin-bottom: 0.5rem;
-  }
+  .notes-hint { font-size: 0.75rem; color: #6e7681; margin-top: 0.25rem; }
+  .editor-tabs { display: flex; gap: 0.25rem; margin-bottom: 0.5rem; }
   .tab-btn {
-    background: #161b22;
-    color: #8b949e;
-    border: 1px solid #30363d;
-    padding: 0.3rem 0.8rem;
-    border-radius: 4px 4px 0 0;
-    cursor: pointer;
-    font-size: 0.85rem;
-    border-bottom: none;
+    background: #161b22; color: #8b949e; border: 1px solid #30363d;
+    padding: 0.3rem 0.8rem; border-radius: 4px 4px 0 0; cursor: pointer;
+    font-size: 0.85rem; border-bottom: none;
   }
   .tab-btn.active { background: #1c2128; color: #e6edf3; border-color: #58a6ff; }
 
-  /* Status history */
   .status-history {
-    font-size: 0.75rem;
-    color: #6e7681;
-    margin-bottom: 1rem;
-    padding: 0.5rem 0.75rem;
-    background: #161b22;
-    border-radius: 4px;
+    font-size: 0.75rem; color: #6e7681; padding: 0.5rem 0.75rem;
+    background: #161b22; border-radius: 4px;
   }
   .status-history-item { display: block; padding: 0.15rem 0; }
 
-  /* Images */
   .images-area { margin-top: 1.5rem; }
-  .image-controls {
-    display: flex;
-    gap: 0.5rem;
-    align-items: center;
-    flex-wrap: wrap;
-    margin-bottom: 0.5rem;
-  }
+  .image-controls { display: flex; gap: 0.5rem; align-items: center; flex-wrap: wrap; margin-bottom: 0.5rem; }
   .add-image-btn {
-    background: #21262d;
-    color: #e6edf3;
-    border: 1px dashed #30363d;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.85rem;
+    background: #21262d; color: #e6edf3; border: 1px dashed #30363d;
+    padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.85rem;
   }
   .add-image-btn:hover { border-color: #58a6ff; border-style: solid; }
   .image-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
-    gap: 0.5rem;
-    margin-top: 0.5rem;
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 0.5rem; margin-top: 0.5rem;
   }
   .image-tile {
-    position: relative;
-    aspect-ratio: 1;
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
-    overflow: hidden;
-    cursor: pointer;
+    position: relative; aspect-ratio: 1; background: #161b22;
+    border: 1px solid #30363d; border-radius: 6px; overflow: hidden; cursor: pointer;
   }
-  .image-tile img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-  }
+  .image-tile img { width: 100%; height: 100%; object-fit: cover; display: block; }
   .image-tile .delete-img {
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    background: rgba(218, 54, 51, 0.9);
-    color: white;
-    border: none;
-    width: 24px;
-    height: 24px;
-    border-radius: 50%;
-    cursor: pointer;
-    font-size: 0.9rem;
-    line-height: 1;
-    opacity: 0;
-    transition: opacity 0.2s;
-    padding: 0;
+    position: absolute; top: 4px; right: 4px;
+    background: rgba(218, 54, 51, 0.9); color: white; border: none;
+    width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+    font-size: 0.9rem; line-height: 1; opacity: 0; transition: opacity 0.2s; padding: 0;
   }
   .image-tile:hover .delete-img { opacity: 1; }
   .image-tile .img-caption {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    position: absolute; bottom: 0; left: 0; right: 0;
     background: linear-gradient(transparent, rgba(0,0,0,0.85));
-    color: white;
-    padding: 1.5rem 0.5rem 0.4rem 0.5rem;
-    font-size: 0.75rem;
-    text-overflow: ellipsis;
-    overflow: hidden;
-    white-space: nowrap;
+    color: white; padding: 1.5rem 0.5rem 0.4rem 0.5rem; font-size: 0.75rem;
+    text-overflow: ellipsis; overflow: hidden; white-space: nowrap;
+  }
+  .image-uploading {
+    display: flex; align-items: center; justify-content: center;
+    aspect-ratio: 1; background: #161b22; border: 1px dashed #30363d;
+    border-radius: 6px; color: #8b949e; font-size: 0.8rem;
   }
 
-  /* Lightbox */
   .lightbox {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.92);
-    z-index: 1000;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem;
-    flex-direction: column;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.92);
+    z-index: 1000; align-items: center; justify-content: center;
+    padding: 2rem; flex-direction: column;
   }
   .lightbox.open { display: flex; }
-  .lightbox img {
-    max-width: 90vw;
-    max-height: 80vh;
-    object-fit: contain;
-    border-radius: 6px;
-  }
-  .lightbox-caption {
-    color: #e6edf3;
-    margin-top: 1rem;
-    text-align: center;
-    max-width: 80%;
-  }
+  .lightbox img { max-width: 90vw; max-height: 80vh; object-fit: contain; border-radius: 6px; }
+  .lightbox-caption { color: #e6edf3; margin-top: 1rem; text-align: center; max-width: 80%; }
   .lightbox-close {
-    position: absolute;
-    top: 1rem;
-    right: 1.5rem;
-    color: white;
-    background: transparent;
-    border: none;
-    font-size: 2rem;
-    cursor: pointer;
+    position: absolute; top: 1rem; right: 1.5rem; color: white;
+    background: transparent; border: none; font-size: 2rem; cursor: pointer;
   }
 
-  /* Controls */
-  .controls {
-    margin: 2rem 0 1rem 0;
-    display: flex;
-    gap: 0.5rem;
-    flex-wrap: wrap;
-  }
+  .controls { margin: 2rem 0 1rem 0; display: flex; gap: 0.5rem; flex-wrap: wrap; }
   button.action {
-    background: #21262d;
-    color: #e6edf3;
-    border: 1px solid #30363d;
-    padding: 0.5rem 1rem;
-    border-radius: 6px;
-    cursor: pointer;
-    font-size: 0.9rem;
+    background: #21262d; color: #e6edf3; border: 1px solid #30363d;
+    padding: 0.5rem 1rem; border-radius: 6px; cursor: pointer; font-size: 0.9rem;
   }
   button.action:hover { background: #30363d; border-color: #58a6ff; }
   button.action.danger:hover { background: #da3633; border-color: #f85149; }
 
   .notes-footer {
-    margin-top: 3rem;
-    padding: 1rem 1.5rem;
-    background: #161b22;
-    border: 1px solid #30363d;
-    border-radius: 6px;
+    margin-top: 3rem; padding: 1rem 1.5rem; background: #161b22;
+    border: 1px solid #30363d; border-radius: 6px;
   }
   .notes-footer h3 { margin-top: 0; }
   .notes-footer ul li {
-    background: transparent;
-    border: none;
-    cursor: default;
-    padding: 0.25rem 0;
-    display: list-item;
-    list-style: disc;
-    margin-left: 1.5rem;
+    background: transparent; border: none; cursor: default; padding: 0.25rem 0;
+    display: list-item; list-style: disc; margin-left: 1.5rem;
   }
+  .config-warning {
+    background: rgba(248, 81, 73, 0.1); border: 1px solid rgba(248, 81, 73, 0.4);
+    border-radius: 8px; padding: 1rem 1.25rem; margin: 2rem 0; color: #f85149;
+  }
+  code.inline { background: #1c2128; padding: 0.1rem 0.4rem; border-radius: 3px; font-size: 0.9em; }
 </style>
 </head>
 <body>
 
 <h1>🔧 Aylık PCB Tasarım Rutini</h1>
-<p class="intro">Her ay listeden bir proje seç. Her görev için durumu (status) güncelle, notlar ve fotoğraflar ekle.</p>
+<p class="intro">Her ay listeden bir proje seç. Durumu güncelle, notlar ve fotoğraflar ekle, bitince ⭐ ile değerlendir. Tüm veriler buluta kaydedilir ve cihazların arasında senkronlanır.</p>
 
-<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
-<div class="progress-text" id="progressText">0 / 0 tamamlandı</div>
-
-<div class="status-legend">
-  <span><span class="dot" style="background:#30363d"></span>Başlanmadı</span>
-  <span><span class="dot" style="background:#58a6ff"></span>Şematik tamamlandı</span>
-  <span><span class="dot" style="background:#a371f7"></span>PCB tasarımı tamamlandı</span>
-  <span><span class="dot" style="background:#d29922"></span>Sipariş verildi</span>
-  <span><span class="dot" style="background:#2ea043"></span>Testleri tamamlandı</span>
+<!-- Auth bar (shown when logged in) -->
+<div class="auth-bar" id="authBar" style="display:none">
+  <div class="auth-info">
+    <img id="userPhoto" src="" alt="">
+    <span id="userName"></span>
+    <span class="sync-status" id="syncStatus"></span>
+  </div>
+  <button class="auth-btn" id="logoutBtn">Çıkış Yap</button>
 </div>
 
-<div class="controls">
-  <button class="action" onclick="exportData()">📥 Yedek İndir (JSON)</button>
-  <button class="action" onclick="document.getElementById('importFile').click()">📤 Yedekten Yükle</button>
-  <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
-  <button class="action danger" onclick="resetAll()">🗑️ Tümünü Sıfırla</button>
+<!-- Login gate -->
+<div class="login-gate" id="loginGate">
+  <h2>🔐 Giriş Yap</h2>
+  <p>Verilerini buluta kaydetmek ve tüm cihazlarından erişmek için Google hesabınla giriş yap. Yalnızca senin verilerin, yalnızca sana görünür.</p>
+  <button class="auth-btn primary" id="loginBtn">Google ile Giriş Yap</button>
+  <div id="loginError" style="color:#f85149; margin-top:1rem; font-size:0.85rem;"></div>
 </div>
 
-<h2 class="level-1">🟢 Seviye 1 — Başlangıç</h2>
-<p class="level-desc">THT ağırlıklı, tek katman yeterli. Workflow oturtmak için ideal.</p>
-<ul data-level="1" class="task-list">
-  <li data-key="555 Timer LED Blinker"><span class="label">555 Timer LED Blinker</span></li>
-  <li data-key="Elektronik zar (CD4017 + 7 LED)"><span class="label">Elektronik zar (CD4017 + 7 LED)</span></li>
-  <li data-key="LM3914 VU metre"><span class="label">LM3914 VU metre</span></li>
-  <li data-key="Logic probe"><span class="label">Logic probe</span></li>
-  <li data-key="Continuity tester"><span class="label">Continuity tester (süreklilik testi)</span></li>
-  <li data-key="Lineer voltaj regülatörü"><span class="label">Lineer voltaj regülatörü (LM7805 / AMS1117)</span></li>
-  <li data-key="USB-C breakout basit"><span class="label">USB-C breakout (basit, sadece güç)</span></li>
-  <li data-key="7-segment sürücü"><span class="label">7-segment display sürücü</span></li>
-  <li data-key="Servo tester"><span class="label">Servo tester</span></li>
-  <li data-key="IR remote receiver"><span class="label">IR remote receiver breakout</span></li>
-  <li data-key="Solenoid sürücü"><span class="label">Solenoid sürücü</span></li>
-  <li data-key="EL wire inverter"><span class="label">EL wire inverter (küçük)</span></li>
-</ul>
+<!-- App content (shown when logged in) -->
+<div id="appContent">
 
-<h2 class="level-2">🟡 Seviye 2 — Orta-Kolay</h2>
-<p class="level-desc">SMD'ye giriş, çok bileşenli devreler, basit güç yönetimi.</p>
-<ul data-level="2" class="task-list">
-  <li data-key="Buck converter"><span class="label">Buck converter breakout (MP1584 / LM2596)</span></li>
-  <li data-key="Boost converter"><span class="label">Boost converter breakout</span></li>
-  <li data-key="TP4056"><span class="label">TP4056 + DW01 Li-ion şarj & koruma kartı</span></li>
-  <li data-key="LM386 amp"><span class="label">Op-amp ses amplifikatörü (LM386)</span></li>
-  <li data-key="Aktif filtre"><span class="label">Aktif filtre kartı (low-pass / band-pass)</span></li>
-  <li data-key="Mikrofon preamp"><span class="label">Mikrofon preamp</span></li>
-  <li data-key="Wien bridge"><span class="label">Wien bridge osilatör</span></li>
-  <li data-key="Sample hold"><span class="label">Sample &amp; hold devresi</span></li>
-  <li data-key="Shift register LED"><span class="label">Shift register LED bar (74HC595)</span></li>
-  <li data-key="Binary counter"><span class="label">Binary counter göstergesi</span></li>
-  <li data-key="Rotary encoder"><span class="label">Rotary encoder breakout</span></li>
-  <li data-key="Cap touch slider"><span class="label">Capacitive touch slider</span></li>
-  <li data-key="Level converter"><span class="label">Logic level converter</span></li>
-  <li data-key="USB-UART"><span class="label">USB-UART köprüsü (CH340 / CP2102)</span></li>
-  <li data-key="DRV8833"><span class="label">H-bridge motor sürücü (DRV8833)</span></li>
-  <li data-key="A4988"><span class="label">Step motor sürücü (A4988 klonu)</span></li>
-  <li data-key="WS2812B"><span class="label">WS2812B LED matrix</span></li>
-  <li data-key="OLED breakout"><span class="label">OLED breakout</span></li>
-  <li data-key="Volume kontrol"><span class="label">Rotary encoder volume kontrol</span></li>
-  <li data-key="TEA5767"><span class="label">FM radyo alıcısı (TEA5767)</span></li>
-  <li data-key="PD trigger"><span class="label">PD trigger USB-C breakout</span></li>
-</ul>
+  <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+  <div class="progress-text" id="progressText">0 / 0 tamamlandı</div>
 
-<h2 class="level-3">🟠 Seviye 3 — Orta-İleri</h2>
-<p class="level-desc">Mikrodenetleyici tasarımı, switching layout, çok sensörlü sistemler.</p>
-<ul data-level="3" class="task-list">
-  <li data-key="ATtiny85 dev"><span class="label">ATtiny85 dev board (ISP header, decoupling)</span></li>
-  <li data-key="ATmega328"><span class="label">ATmega328 Arduino klonu</span></li>
-  <li data-key="ESP32 dev"><span class="label">ESP8266 / ESP32 dev board (anten clearance dahil)</span></li>
-  <li data-key="RP2040"><span class="label">RP2040 minimum sistem</span></li>
-  <li data-key="STM32 blue pill"><span class="label">STM32 "blue pill" klonu</span></li>
-  <li data-key="CH32V003"><span class="label">CH32V003 (RISC-V) dev board</span></li>
-  <li data-key="RPi HAT"><span class="label">Raspberry Pi HAT (GPIO + EEPROM)</span></li>
-  <li data-key="I2C sensör hub"><span class="label">I2C sensör hub (BME280 + MPU6050 + OLED)</span></li>
-  <li data-key="Ultrasonik"><span class="label">Ultrasonik mesafe modülü</span></li>
-  <li data-key="HX711"><span class="label">HX711 + load cell breakout</span></li>
-  <li data-key="Geiger"><span class="label">Geiger sayacı (HV üreteç dahil)</span></li>
-  <li data-key="Nixie"><span class="label">Nixie tube sürücü (HV switching)</span></li>
-  <li data-key="Charge pump"><span class="label">Negatif voltaj üreteci (charge pump)</span></li>
-  <li data-key="Solar harvester"><span class="label">Solar harvester (panel + supercap + MPPT)</span></li>
-  <li data-key="Theremin"><span class="label">Theremin</span></li>
-  <li data-key="VCO synth"><span class="label">VCO/VCA synth modülü</span></li>
-  <li data-key="POV display"><span class="label">POV (persistence of vision) display</span></li>
-  <li data-key="nRF24L01"><span class="label">nRF24L01 breakout (RF layout)</span></li>
-  <li data-key="BT audio"><span class="label">Bluetooth audio receiver</span></li>
-  <li data-key="IR transceiver"><span class="label">IR transceiver modülü</span></li>
-  <li data-key="E-paper"><span class="label">E-paper interface kartı</span></li>
-  <li data-key="Dijital kilit"><span class="label">Dijital kasa kilidi (D flip-flop tabanlı)</span></li>
-  <li data-key="ESR meter"><span class="label">ESR meter</span></li>
-  <li data-key="Bench PSU panel"><span class="label">Bench power supply ön panel</span></li>
-</ul>
+  <div class="status-legend">
+    <span><span class="dot" style="background:#30363d"></span>Başlanmadı</span>
+    <span><span class="dot" style="background:#58a6ff"></span>Şematik tamamlandı</span>
+    <span><span class="dot" style="background:#a371f7"></span>PCB tasarımı tamamlandı</span>
+    <span><span class="dot" style="background:#d29922"></span>Sipariş verildi</span>
+    <span><span class="dot" style="background:#2ea043"></span>Testleri tamamlandı</span>
+  </div>
 
-<h2 class="level-4">🔴 Seviye 4 — İleri</h2>
-<p class="level-desc">4 katman, mixed-signal, RF, yüksek hız — profesyonel PCB tasarımına geçiş.</p>
-<ul data-level="4" class="task-list">
-  <li data-key="LoRa"><span class="label">LoRa modül kartı (RF tasarım)</span></li>
-  <li data-key="Kamera interface"><span class="label">Kamera interface kartı (MIPI / parallel)</span></li>
-  <li data-key="BLDC ESC"><span class="label">BLDC ESC (kapalı çevrim akım kontrolü)</span></li>
-  <li data-key="Tesla coil"><span class="label">Tesla coil sürücü (yüksek frekans + izolasyon)</span></li>
-  <li data-key="STM32 ADC"><span class="label">STM32 + analog ön uç (ADC, ayrı ground plane'ler)</span></li>
-  <li data-key="4-layer mixed"><span class="label">4-layer mixed-signal kart (DAC + filtre + MCU)</span></li>
-  <li data-key="Class-D"><span class="label">Class-D amplifikatör</span></li>
-  <li data-key="Switching PSU"><span class="label">Switching bench power supply (programmable)</span></li>
-  <li data-key="Hot air"><span class="label">Hot air rework station kontrol kartı</span></li>
-  <li data-key="Reflow"><span class="label">Reflow fırın kontrolcü (PID + termokupul)</span></li>
-  <li data-key="FPGA"><span class="label">FPGA breakout (iCE40 / Tang Nano)</span></li>
-  <li data-key="USB hub"><span class="label">USB hub (USB 2.0)</span></li>
-  <li data-key="Ethernet PHY"><span class="label">Ethernet PHY breakout</span></li>
-</ul>
+  <div class="controls">
+    <button class="action" onclick="exportData()">📥 Yedek İndir (JSON)</button>
+    <button class="action danger" onclick="resetAll()">🗑️ Tümünü Sıfırla</button>
+  </div>
 
-<div class="notes-footer">
-  <h3>📝 Notlar</h3>
-  <ul>
-    <li><strong>Status'lar:</strong> her görevdeki dropdown ile aşamayı güncelle. Sol kenar rengi status'a göre değişir, geçmiş tarihleri "📝 Notlar" panelinde görebilirsin</li>
-    <li><strong>İlerleme çubuğu</strong> sadece "Testleri tamamlandı" status'una geçen projeleri sayar</li>
-    <li><strong>Notlar markdown destekler:</strong> <code>**kalın**</code>, <code>*italik*</code>, <code>`kod`</code>, <code>### başlık</code>, <code>- liste</code>, <code>[link](url)</code></li>
-    <li><strong>Fotoğraflar</strong> otomatik olarak 1200px'e küçültülür ve JPEG'e çevrilir</li>
-    <li><strong>Önemli:</strong> Periyodik olarak "Yedek İndir" ile JSON yedek al — tarayıcı verisi silinirse her şey kaybolur</li>
+  <h2 class="level-1">🟢 Seviye 1 — Başlangıç</h2>
+  <p class="level-desc">THT ağırlıklı, tek katman yeterli. Workflow oturtmak için ideal.</p>
+  <ul data-level="1" class="task-list">
+    <li data-key="555 Timer LED Blinker"><span class="label">555 Timer LED Blinker</span></li>
+    <li data-key="Elektronik zar (CD4017 + 7 LED)"><span class="label">Elektronik zar (CD4017 + 7 LED)</span></li>
+    <li data-key="LM3914 VU metre"><span class="label">LM3914 VU metre</span></li>
+    <li data-key="Logic probe"><span class="label">Logic probe</span></li>
+    <li data-key="Continuity tester"><span class="label">Continuity tester (süreklilik testi)</span></li>
+    <li data-key="Lineer voltaj regülatörü"><span class="label">Lineer voltaj regülatörü (LM7805 / AMS1117)</span></li>
+    <li data-key="USB-C breakout basit"><span class="label">USB-C breakout (basit, sadece güç)</span></li>
+    <li data-key="7-segment sürücü"><span class="label">7-segment display sürücü</span></li>
+    <li data-key="Servo tester"><span class="label">Servo tester</span></li>
+    <li data-key="IR remote receiver"><span class="label">IR remote receiver breakout</span></li>
+    <li data-key="Solenoid sürücü"><span class="label">Solenoid sürücü</span></li>
+    <li data-key="EL wire inverter"><span class="label">EL wire inverter (küçük)</span></li>
   </ul>
+
+  <h2 class="level-2">🟡 Seviye 2 — Orta-Kolay</h2>
+  <p class="level-desc">SMD'ye giriş, çok bileşenli devreler, basit güç yönetimi.</p>
+  <ul data-level="2" class="task-list">
+    <li data-key="Buck converter"><span class="label">Buck converter breakout (MP1584 / LM2596)</span></li>
+    <li data-key="Boost converter"><span class="label">Boost converter breakout</span></li>
+    <li data-key="TP4056"><span class="label">TP4056 + DW01 Li-ion şarj & koruma kartı</span></li>
+    <li data-key="LM386 amp"><span class="label">Op-amp ses amplifikatörü (LM386)</span></li>
+    <li data-key="Aktif filtre"><span class="label">Aktif filtre kartı (low-pass / band-pass)</span></li>
+    <li data-key="Mikrofon preamp"><span class="label">Mikrofon preamp</span></li>
+    <li data-key="Wien bridge"><span class="label">Wien bridge osilatör</span></li>
+    <li data-key="Sample hold"><span class="label">Sample &amp; hold devresi</span></li>
+    <li data-key="Shift register LED"><span class="label">Shift register LED bar (74HC595)</span></li>
+    <li data-key="Binary counter"><span class="label">Binary counter göstergesi</span></li>
+    <li data-key="Rotary encoder"><span class="label">Rotary encoder breakout</span></li>
+    <li data-key="Cap touch slider"><span class="label">Capacitive touch slider</span></li>
+    <li data-key="Level converter"><span class="label">Logic level converter</span></li>
+    <li data-key="USB-UART"><span class="label">USB-UART köprüsü (CH340 / CP2102)</span></li>
+    <li data-key="DRV8833"><span class="label">H-bridge motor sürücü (DRV8833)</span></li>
+    <li data-key="A4988"><span class="label">Step motor sürücü (A4988 klonu)</span></li>
+    <li data-key="WS2812B"><span class="label">WS2812B LED matrix</span></li>
+    <li data-key="OLED breakout"><span class="label">OLED breakout</span></li>
+    <li data-key="Volume kontrol"><span class="label">Rotary encoder volume kontrol</span></li>
+    <li data-key="TEA5767"><span class="label">FM radyo alıcısı (TEA5767)</span></li>
+    <li data-key="PD trigger"><span class="label">PD trigger USB-C breakout</span></li>
+  </ul>
+
+  <h2 class="level-3">🟠 Seviye 3 — Orta-İleri</h2>
+  <p class="level-desc">Mikrodenetleyici tasarımı, switching layout, çok sensörlü sistemler.</p>
+  <ul data-level="3" class="task-list">
+    <li data-key="ATtiny85 dev"><span class="label">ATtiny85 dev board (ISP header, decoupling)</span></li>
+    <li data-key="ATmega328"><span class="label">ATmega328 Arduino klonu</span></li>
+    <li data-key="ESP32 dev"><span class="label">ESP8266 / ESP32 dev board (anten clearance dahil)</span></li>
+    <li data-key="RP2040"><span class="label">RP2040 minimum sistem</span></li>
+    <li data-key="STM32 blue pill"><span class="label">STM32 "blue pill" klonu</span></li>
+    <li data-key="CH32V003"><span class="label">CH32V003 (RISC-V) dev board</span></li>
+    <li data-key="RPi HAT"><span class="label">Raspberry Pi HAT (GPIO + EEPROM)</span></li>
+    <li data-key="I2C sensör hub"><span class="label">I2C sensör hub (BME280 + MPU6050 + OLED)</span></li>
+    <li data-key="Ultrasonik"><span class="label">Ultrasonik mesafe modülü</span></li>
+    <li data-key="HX711"><span class="label">HX711 + load cell breakout</span></li>
+    <li data-key="Geiger"><span class="label">Geiger sayacı (HV üreteç dahil)</span></li>
+    <li data-key="Nixie"><span class="label">Nixie tube sürücü (HV switching)</span></li>
+    <li data-key="Charge pump"><span class="label">Negatif voltaj üreteci (charge pump)</span></li>
+    <li data-key="Solar harvester"><span class="label">Solar harvester (panel + supercap + MPPT)</span></li>
+    <li data-key="Theremin"><span class="label">Theremin</span></li>
+    <li data-key="VCO synth"><span class="label">VCO/VCA synth modülü</span></li>
+    <li data-key="POV display"><span class="label">POV (persistence of vision) display</span></li>
+    <li data-key="nRF24L01"><span class="label">nRF24L01 breakout (RF layout)</span></li>
+    <li data-key="BT audio"><span class="label">Bluetooth audio receiver</span></li>
+    <li data-key="IR transceiver"><span class="label">IR transceiver modülü</span></li>
+    <li data-key="E-paper"><span class="label">E-paper interface kartı</span></li>
+    <li data-key="Dijital kilit"><span class="label">Dijital kasa kilidi (D flip-flop tabanlı)</span></li>
+    <li data-key="ESR meter"><span class="label">ESR meter</span></li>
+    <li data-key="Bench PSU panel"><span class="label">Bench power supply ön panel</span></li>
+  </ul>
+
+  <h2 class="level-4">🔴 Seviye 4 — İleri</h2>
+  <p class="level-desc">4 katman, mixed-signal, RF, yüksek hız — profesyonel PCB tasarımına geçiş.</p>
+  <ul data-level="4" class="task-list">
+    <li data-key="LoRa"><span class="label">LoRa modül kartı (RF tasarım)</span></li>
+    <li data-key="Kamera interface"><span class="label">Kamera interface kartı (MIPI / parallel)</span></li>
+    <li data-key="BLDC ESC"><span class="label">BLDC ESC (kapalı çevrim akım kontrolü)</span></li>
+    <li data-key="Tesla coil"><span class="label">Tesla coil sürücü (yüksek frekans + izolasyon)</span></li>
+    <li data-key="STM32 ADC"><span class="label">STM32 + analog ön uç (ADC, ayrı ground plane'ler)</span></li>
+    <li data-key="4-layer mixed"><span class="label">4-layer mixed-signal kart (DAC + filtre + MCU)</span></li>
+    <li data-key="Class-D"><span class="label">Class-D amplifikatör</span></li>
+    <li data-key="Switching PSU"><span class="label">Switching bench power supply (programmable)</span></li>
+    <li data-key="Hot air"><span class="label">Hot air rework station kontrol kartı</span></li>
+    <li data-key="Reflow"><span class="label">Reflow fırın kontrolcü (PID + termokupul)</span></li>
+    <li data-key="FPGA"><span class="label">FPGA breakout (iCE40 / Tang Nano)</span></li>
+    <li data-key="USB hub"><span class="label">USB hub (USB 2.0)</span></li>
+    <li data-key="Ethernet PHY"><span class="label">Ethernet PHY breakout</span></li>
+  </ul>
+
+  <div class="notes-footer">
+    <h3>📝 Notlar</h3>
+    <ul>
+      <li><strong>Senkron:</strong> tüm değişiklikler otomatik buluta kaydedilir. Başka bir cihazdan giriş yaptığında aynı veriyi görürsün</li>
+      <li><strong>⭐ Değerlendirme:</strong> proje "Testleri tamamlandı" olunca yıldız puanlama açılır</li>
+      <li><strong>Notlar markdown destekler:</strong> <code class="inline">**kalın**</code>, <code class="inline">*italik*</code>, <code class="inline">`kod`</code>, <code class="inline">### başlık</code>, <code class="inline">- liste</code></li>
+      <li><strong>Fotoğraflar</strong> 1200px'e küçültülüp buluta kaydedilir. Her projeye birkaç fotoğraf rahat sığar</li>
+      <li><strong>Yedek:</strong> istersen "Yedek İndir" ile her şeyin JSON kopyasını alabilirsin (ekstra güvence için)</li>
+    </ul>
+  </div>
 </div>
 
-<!-- Lightbox -->
 <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
   <button class="lightbox-close" onclick="closeLightbox()">×</button>
   <img id="lightboxImg" src="" alt="">
   <div class="lightbox-caption" id="lightboxCaption"></div>
 </div>
 
+<!-- Firebase SDK (CDN, compat build for simple global usage) -->
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+
 <script>
-  const STORAGE_KEY = 'pcb_routine_progress_v3';
-  const MAX_IMAGE_DIM = 1200;
+  // ─── Firebase config ────────────────────────────
+  const firebaseConfig = {
+    apiKey: "AIzaSyCj1YOoljWefh3oFdxsG6Z0rg9XlHPR3Eg",
+    authDomain: "pcb-rutini.firebaseapp.com",
+    projectId: "pcb-rutini",
+    storageBucket: "pcb-rutini.firebasestorage.app",
+    messagingSenderId: "447336025582",
+    appId: "1:447336025582:web:e0bf15b6abb990657d12ff",
+    measurementId: "G-NST11BDRHP"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+  const provider = new firebase.auth.GoogleAuthProvider();
+
+  let currentUser = null;
+  let state = {};          // in-memory copy of all task data
+  let unsubscribe = null;  // firestore listener
 
   const STATUSES = [
     { value: 0, label: 'Başlanmadı' },
@@ -524,55 +534,62 @@
     { value: 4, label: 'Testleri tamamlandı' }
   ];
   const DONE_STATUS = 4;
+  const MAX_IMAGE_DIM = 1200;
 
-  function loadState() {
-    try { return JSON.parse(localStorage.getItem(STORAGE_KEY)) || {}; }
-    catch { return {}; }
-  }
-  function saveState(state) {
-    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
-    catch (e) {
-      alert('Depolama alanı doldu! Yedek alıp bazı resimleri silmen gerekebilir.');
-      throw e;
+  const RATING_DIMS = [
+    { key: 'functionality', label: 'İşlevsellik', desc: 'Ne kadar iyi ve güvenilir çalışıyor?' },
+    { key: 'learning', label: 'Öğrenme Değeri', desc: 'Ne kadar yeni şey öğrendin?' },
+    { key: 'design', label: 'Tasarım / Layout', desc: 'Routing, yerleşim, estetik kalitesi' },
+    { key: 'enjoyment', label: 'Keyif / Tatmin', desc: 'Yaparken ne kadar keyif aldın?' }
+  ];
+
+  // ─── Sync status indicator ──────────────────────
+  let syncTimeout;
+  function setSyncStatus(stateStr) {
+    const el = document.getElementById('syncStatus');
+    el.className = 'sync-status ' + stateStr;
+    if (stateStr === 'saving') el.textContent = '⟳ kaydediliyor...';
+    else if (stateStr === 'saved') {
+      el.textContent = '✓ kaydedildi';
+      clearTimeout(syncTimeout);
+      syncTimeout = setTimeout(() => { el.textContent = ''; }, 2000);
     }
+    else if (stateStr === 'error') el.textContent = '⚠ kayıt hatası';
+    else el.textContent = '';
+  }
+
+  // ─── Firestore helpers ──────────────────────────
+  // Each task is a document in: users/{uid}/tasks/{taskKey}
+  function tasksCol() {
+    return db.collection('users').doc(currentUser.uid).collection('tasks');
   }
 
   function getTaskData(key) {
-    const state = loadState();
-    return state[key] || { status: 0, statusHistory: [], notes: '', images: [] };
-  }
-  function setTaskData(key, data) {
-    const state = loadState();
-    state[key] = data;
-    saveState(state);
+    const d = state[key] || {};
+    return {
+      status: d.status || 0,
+      statusHistory: d.statusHistory || [],
+      notes: d.notes || '',
+      images: d.images || [],
+      ratings: d.ratings || {},
+      thoughts: d.thoughts || ''
+    };
   }
 
-  // ─── Migration from v2 (done/date) ─────────────
-  function migrateV2() {
-    const oldKey = 'pcb_routine_progress_v2';
-    const oldRaw = localStorage.getItem(oldKey);
-    const newRaw = localStorage.getItem(STORAGE_KEY);
-    if (!oldRaw || newRaw) return;
+  async function setTaskData(key, data) {
+    state[key] = data;
+    setSyncStatus('saving');
     try {
-      const oldState = JSON.parse(oldRaw);
-      const newState = {};
-      for (const key in oldState) {
-        const t = oldState[key];
-        newState[key] = {
-          status: t.done ? DONE_STATUS : 0,
-          statusHistory: t.done && t.date
-            ? [{ status: DONE_STATUS, date: t.date }]
-            : [],
-          notes: t.notes || '',
-          images: t.images || []
-        };
-      }
-      saveState(newState);
+      // Firestore doc IDs can't contain '/', so encode the key
+      const docId = encodeURIComponent(key);
+      await tasksCol().doc(docId).set(data);
+      setSyncStatus('saved');
     } catch (e) {
-      console.warn('v2 migration failed', e);
+      console.error('save error', e);
+      setSyncStatus('error');
+      alert('Kayıt hatası: ' + e.message + '\n\nMuhtemelen fotoğraf çok büyük (Firestore doküman sınırı ~1MB). Daha küçük bir resim dene.');
     }
   }
-  migrateV2();
 
   // ─── Markdown ───────────────────────────────────
   function renderMarkdown(text) {
@@ -593,7 +610,7 @@
     return '<p>' + html + '</p>';
   }
 
-  // ─── Image handling ─────────────────────────────
+  // ─── Images ─────────────────────────────────────
   function resizeImage(file) {
     return new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -612,7 +629,7 @@
           canvas.width = width;
           canvas.height = height;
           canvas.getContext('2d').drawImage(img, 0, 0, width, height);
-          resolve(canvas.toDataURL('image/jpeg', 0.85));
+          resolve(canvas.toDataURL('image/jpeg', 0.82));
         };
         img.src = e.target.result;
       };
@@ -625,9 +642,8 @@
       const dataUrl = await resizeImage(file);
       const caption = prompt('Bu resim için kısa bir açıklama (boş bırakabilirsin):', '') || '';
       const data = getTaskData(key);
-      data.images = data.images || [];
       data.images.push({ src: dataUrl, caption: caption, added: new Date().toISOString() });
-      setTaskData(key, data);
+      await setTaskData(key, data);
       renderImages(key);
       updateExpandButton(key);
     } catch (err) {
@@ -635,11 +651,11 @@
     }
   }
 
-  function deleteImage(key, index) {
+  async function deleteImage(key, index) {
     if (!confirm('Bu resim silinsin mi?')) return;
     const data = getTaskData(key);
     data.images.splice(index, 1);
-    setTaskData(key, data);
+    await setTaskData(key, data);
     renderImages(key);
     updateExpandButton(key);
   }
@@ -649,7 +665,7 @@
     if (!grid) return;
     const data = getTaskData(key);
     grid.innerHTML = '';
-    (data.images || []).forEach((img, i) => {
+    data.images.forEach((img, i) => {
       const tile = document.createElement('div');
       tile.className = 'image-tile';
       const safeCaption = (img.caption || '').replace(/</g, '&lt;');
@@ -677,25 +693,128 @@
     if (e && e.target.tagName === 'IMG') return;
     document.getElementById('lightbox').classList.remove('open');
   }
-  document.addEventListener('keydown', e => {
-    if (e.key === 'Escape') closeLightbox();
-  });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox(); });
 
-  // ─── Status history render ──────────────────────
+  // ─── Status history ─────────────────────────────
   function renderStatusHistory(key) {
     const data = getTaskData(key);
     const container = document.querySelector(`li[data-key="${CSS.escape(key)}"] .status-history`);
     if (!container) return;
     const history = data.statusHistory || [];
-    if (history.length === 0) {
-      container.innerHTML = '<em>Henüz status değişikliği yok.</em>';
-      return;
-    }
+    if (history.length === 0) { container.innerHTML = '<em>Henüz status değişikliği yok.</em>'; return; }
     container.innerHTML = '<strong>Durum geçmişi:</strong>' +
       history.map(h => {
         const label = STATUSES.find(s => s.value === h.status)?.label || '?';
         return `<span class="status-history-item">→ ${label} <em>(${h.date})</em></span>`;
       }).join('');
+  }
+
+  // ─── Rating ─────────────────────────────────────
+  function renderStars(container, value) {
+    container.innerHTML = '';
+    for (let i = 1; i <= 5; i++) {
+      const star = document.createElement('span');
+      star.className = 'star' + (i <= value ? ' filled' : '');
+      star.textContent = '★';
+      star.dataset.val = i;
+      container.appendChild(star);
+    }
+    if (value > 0) {
+      const clear = document.createElement('span');
+      clear.className = 'star clear-star';
+      clear.textContent = '✕ sil';
+      clear.title = 'Puanı sıfırla';
+      clear.dataset.val = 0;
+      container.appendChild(clear);
+    }
+  }
+  function computeAvg(ratings) {
+    const vals = RATING_DIMS.map(d => ratings[d.key]).filter(v => v > 0);
+    if (vals.length === 0) return null;
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  }
+  function updateEvalSummary(key) {
+    const data = getTaskData(key);
+    const summary = document.querySelector(`li[data-key="${CSS.escape(key)}"] .eval-summary`);
+    if (!summary) return;
+    const avg = computeAvg(data.ratings);
+    if (avg === null) summary.innerHTML = '<em>Henüz puanlama yapılmadı.</em>';
+    else {
+      const stars = '★'.repeat(Math.round(avg)) + '☆'.repeat(5 - Math.round(avg));
+      summary.innerHTML = `Ortalama: <strong>${avg.toFixed(1)} / 5</strong> &nbsp; <span style="color:#e3b341">${stars}</span>`;
+    }
+  }
+  function updateRatingBadge(key) {
+    const data = getTaskData(key);
+    const badge = document.querySelector(`li[data-key="${CSS.escape(key)}"] .rating-badge`);
+    if (!badge) return;
+    const avg = computeAvg(data.ratings);
+    badge.textContent = avg !== null ? `★ ${avg.toFixed(1)}` : '';
+  }
+  async function setRating(key, dimKey, value) {
+    const data = getTaskData(key);
+    if (value === 0) delete data.ratings[dimKey];
+    else data.ratings[dimKey] = value;
+    await setTaskData(key, data);
+    const row = document.querySelector(`li[data-key="${CSS.escape(key)}"] .rating-row[data-dim="${dimKey}"] .stars`);
+    if (row) renderStars(row, data.ratings[dimKey] || 0);
+    updateEvalSummary(key);
+    updateRatingBadge(key);
+  }
+  function setEvalLockState(key) {
+    const data = getTaskData(key);
+    const panel = document.querySelector(`li[data-key="${CSS.escape(key)}"] .eval-panel`);
+    if (!panel) return;
+    const locked = data.status !== DONE_STATUS;
+    panel.classList.toggle('locked', locked);
+    const lockMsg = panel.querySelector('.eval-locked-msg');
+    const body = panel.querySelector('.eval-body');
+    if (lockMsg) lockMsg.style.display = locked ? 'block' : 'none';
+    if (body) body.style.display = locked ? 'none' : 'block';
+  }
+
+  function buildEvalPanel(key) {
+    const data = getTaskData(key);
+    const panel = document.createElement('div');
+    panel.className = 'eval-panel';
+    panel.innerHTML = `
+      <h4 class="eval-title">⭐ Proje Değerlendirmesi</h4>
+      <div class="eval-locked-msg">Bu bölüm proje "Testleri tamamlandı" durumuna geçince aktif olur.</div>
+      <div class="eval-body">
+        ${RATING_DIMS.map(dim => `
+          <div class="rating-row" data-dim="${dim.key}">
+            <span class="rating-label">${dim.label}<small>${dim.desc}</small></span>
+            <span class="stars"></span>
+          </div>
+        `).join('')}
+        <div class="eval-summary"></div>
+        <h4>💭 Düşünceler</h4>
+        <textarea class="thoughts-editor" placeholder="Devrenin son haliyle ilgili genel düşüncelerin... Neyi farklı yapardın, nelerden memnunsun, bir dahaki sefere neyi denersin?"></textarea>
+      </div>
+    `;
+    RATING_DIMS.forEach(dim => {
+      const starsEl = panel.querySelector(`.rating-row[data-dim="${dim.key}"] .stars`);
+      renderStars(starsEl, data.ratings[dim.key] || 0);
+      starsEl.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (!e.target.dataset.val) return;
+        if (panel.classList.contains('locked')) return;
+        setRating(key, dim.key, parseInt(e.target.dataset.val, 10));
+      });
+    });
+    const thoughts = panel.querySelector('.thoughts-editor');
+    thoughts.value = data.thoughts || '';
+    let tTimer;
+    thoughts.addEventListener('input', () => {
+      clearTimeout(tTimer);
+      tTimer = setTimeout(() => {
+        const d = getTaskData(key);
+        d.thoughts = thoughts.value;
+        setTaskData(key, d);
+      }, 600);
+    });
+    updateEvalSummary(key);
+    return panel;
   }
 
   // ─── Blog section ───────────────────────────────
@@ -706,16 +825,14 @@
     section.innerHTML = `
       <h4>📊 Durum Geçmişi</h4>
       <div class="status-history"></div>
-
       <h4>📝 Notlar</h4>
       <div class="editor-tabs">
         <button type="button" class="tab-btn active" data-tab="write">Yaz</button>
         <button type="button" class="tab-btn" data-tab="preview">Önizle</button>
       </div>
-      <textarea class="notes-editor" placeholder="Bu proje hakkında notlarını buraya yaz...&#10;&#10;Örn: Ne yaptım, ne öğrendim, hangi hatalar oldu, sonraki sefer ne yapacağım..."></textarea>
+      <textarea class="notes-editor" placeholder="Bu proje hakkında notlarını buraya yaz...&#10;&#10;Örn: Ne yaptım, hangi hatalar oldu, üretim süreci, lehimleme deneyimi..."></textarea>
       <div class="notes-preview" style="display:none"></div>
       <div class="notes-hint">Otomatik kaydedilir • Markdown: **kalın** *italik* \`kod\` ### başlık - liste [link](url)</div>
-
       <div class="images-area">
         <h4>📸 Fotoğraflar</h4>
         <div class="image-controls">
@@ -725,6 +842,8 @@
         <div class="image-grid"></div>
       </div>
     `;
+    const evalPanel = buildEvalPanel(key);
+    section.insertBefore(evalPanel, section.firstChild);
     li.appendChild(section);
 
     const editor = section.querySelector('.notes-editor');
@@ -755,7 +874,7 @@
         d.notes = editor.value;
         setTaskData(key, d);
         updateExpandButton(key);
-      }, 400);
+      }, 600);
     });
 
     const fileInput = section.querySelector('input[type="file"]');
@@ -764,14 +883,13 @@
       fileInput.click();
     });
     fileInput.addEventListener('change', async (e) => {
-      for (const file of e.target.files) {
-        await addImage(key, file);
-      }
+      for (const file of e.target.files) { await addImage(key, file); }
       fileInput.value = '';
     });
 
     renderImages(key);
     renderStatusHistory(key);
+    setEvalLockState(key);
   }
 
   function updateExpandButton(key) {
@@ -779,12 +897,9 @@
     const btn = document.querySelector(`li[data-key="${CSS.escape(key)}"] .expand-btn`);
     if (!btn) return;
     const hasNotes = data.notes && data.notes.trim();
-    const imgCount = (data.images || []).length;
-    const hasContent = hasNotes || imgCount > 0;
-    btn.classList.toggle('has-content', hasContent);
-    btn.textContent = imgCount > 0
-      ? `📝 Notlar (${imgCount} 📸)`
-      : '📝 Notlar';
+    const imgCount = data.images.length;
+    btn.classList.toggle('has-content', hasNotes || imgCount > 0);
+    btn.textContent = imgCount > 0 ? `📝 Notlar (${imgCount} 📸)` : '📝 Notlar';
   }
 
   // ─── Task build ─────────────────────────────────
@@ -800,15 +915,15 @@
     const optionsHTML = STATUSES.map(s =>
       `<option value="${s.value}" ${s.value === data.status ? 'selected' : ''}>${s.label}</option>`
     ).join('');
-
     const lastChange = (data.statusHistory && data.statusHistory.length)
-      ? data.statusHistory[data.statusHistory.length - 1].date
-      : '';
+      ? data.statusHistory[data.statusHistory.length - 1].date : '';
+    const avg = computeAvg(data.ratings);
 
     const header = document.createElement('div');
     header.className = 'task-header';
     header.innerHTML = `
       <span class="label">${labelHTML}</span>
+      <span class="rating-badge">${avg !== null ? '★ ' + avg.toFixed(1) : ''}</span>
       <select class="status-select" data-status="${data.status}">${optionsHTML}</select>
       <span class="date">${lastChange ? '⏱ ' + lastChange : ''}</span>
       <button type="button" class="expand-btn">📝 Notlar</button>
@@ -820,20 +935,21 @@
     const expandBtn = header.querySelector('.expand-btn');
 
     select.addEventListener('click', e => e.stopPropagation());
-    select.addEventListener('change', () => {
+    select.addEventListener('change', async () => {
       const newStatus = parseInt(select.value, 10);
       const d = getTaskData(key);
       if (newStatus === d.status) return;
       const today = new Date().toLocaleDateString('tr-TR');
-      d.statusHistory = d.statusHistory || [];
       d.statusHistory.push({ status: newStatus, date: today });
       d.status = newStatus;
-      setTaskData(key, d);
+      await setTaskData(key, d);
       li.dataset.status = newStatus;
       select.dataset.status = newStatus;
       dateEl.textContent = '⏱ ' + today;
       renderStatusHistory(key);
+      setEvalLockState(key);
       updateProgress();
+      if (newStatus === DONE_STATUS) li.querySelector('.blog-section').classList.add('open');
     });
 
     buildBlogSection(li, key);
@@ -843,13 +959,13 @@
       e.stopPropagation();
       blogSection.classList.toggle('open');
     });
-
     header.addEventListener('click', (e) => {
       if (e.target === select || e.target === expandBtn || select.contains(e.target)) return;
       blogSection.classList.toggle('open');
     });
 
     updateExpandButton(key);
+    updateRatingBadge(key);
   }
 
   function updateProgress() {
@@ -858,20 +974,54 @@
     const inProgress = document.querySelectorAll('li.task:not([data-status="0"]):not([data-status="' + DONE_STATUS + '"])').length;
     const pct = all ? (done / all) * 100 : 0;
     document.getElementById('progressFill').style.width = pct + '%';
-    const inProgressText = inProgress > 0 ? ` • ${inProgress} devam ediyor` : '';
+    const ip = inProgress > 0 ? ` • ${inProgress} devam ediyor` : '';
     document.getElementById('progressText').textContent =
-      done + ' / ' + all + ' tamamlandı (' + pct.toFixed(0) + '%)' + inProgressText;
+      done + ' / ' + all + ' tamamlandı (' + pct.toFixed(0) + '%)' + ip;
   }
 
-  // ─── Reset / Export / Import ────────────────────
-  function resetAll() {
-    if (!confirm('TÜM ilerleme, notlar ve fotoğraflar silinecek. Emin misin?')) return;
+  function buildAllTasks() {
+    document.querySelectorAll('li[data-key]').forEach(li => {
+      // reset if already built (re-login)
+      if (li.classList.contains('task')) {
+        const label = li.querySelector('.label').innerHTML;
+        li.innerHTML = `<span class="label">${label}</span>`;
+        li.classList.remove('task');
+      }
+      buildTask(li);
+    });
+    updateProgress();
+  }
+
+  // ─── Load all data from Firestore ───────────────
+  async function loadAllData() {
+    state = {};
+    const snap = await tasksCol().get();
+    snap.forEach(doc => {
+      const key = decodeURIComponent(doc.id);
+      state[key] = doc.data();
+    });
+  }
+
+  // ─── Reset / Export ─────────────────────────────
+  async function resetAll() {
+    if (!confirm('TÜM ilerleme, notlar, fotoğraflar ve değerlendirmeler buluttan silinecek. Emin misin?')) return;
     if (!confirm('Gerçekten emin misin? Bu işlem geri alınamaz.')) return;
-    localStorage.removeItem(STORAGE_KEY);
-    location.reload();
+    setSyncStatus('saving');
+    try {
+      const snap = await tasksCol().get();
+      const batch = db.batch();
+      snap.forEach(doc => batch.delete(doc.ref));
+      await batch.commit();
+      state = {};
+      buildAllTasks();
+      setSyncStatus('saved');
+    } catch (e) {
+      alert('Silme hatası: ' + e.message);
+      setSyncStatus('error');
+    }
   }
   function exportData() {
-    const data = JSON.stringify(loadState(), null, 2);
+    const data = JSON.stringify(state, null, 2);
     const blob = new Blob([data], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
@@ -880,26 +1030,43 @@
     a.click();
     URL.revokeObjectURL(url);
   }
-  function importData(event) {
-    const file = event.target.files[0];
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const data = JSON.parse(e.target.result);
-        if (!confirm('Mevcut veriler üzerine yazılacak. Devam edilsin mi?')) return;
-        saveState(data);
-        location.reload();
-      } catch {
-        alert('Geçersiz dosya');
-      }
-    };
-    reader.readAsText(file);
-  }
 
-  // ─── Init ───────────────────────────────────────
-  document.querySelectorAll('li[data-key]').forEach(buildTask);
-  updateProgress();
+  // ─── Auth flow ──────────────────────────────────
+  document.getElementById('loginBtn').addEventListener('click', () => {
+    auth.signInWithPopup(provider).catch(err => {
+      document.getElementById('loginError').textContent = 'Giriş hatası: ' + err.message;
+    });
+  });
+  document.getElementById('logoutBtn').addEventListener('click', () => {
+    auth.signOut();
+  });
+
+  auth.onAuthStateChanged(async (user) => {
+    currentUser = user;
+    if (user) {
+      // logged in
+      document.getElementById('loginGate').classList.add('hidden');
+      document.getElementById('appContent').classList.add('visible');
+      document.getElementById('authBar').style.display = 'flex';
+      document.getElementById('userName').textContent = user.displayName || user.email;
+      if (user.photoURL) document.getElementById('userPhoto').src = user.photoURL;
+      else document.getElementById('userPhoto').style.display = 'none';
+
+      try {
+        await loadAllData();
+        buildAllTasks();
+      } catch (e) {
+        console.error(e);
+        alert('Veri yüklenirken hata: ' + e.message);
+      }
+    } else {
+      // logged out
+      document.getElementById('loginGate').classList.remove('hidden');
+      document.getElementById('appContent').classList.remove('visible');
+      document.getElementById('authBar').style.display = 'none';
+      state = {};
+    }
+  });
 </script>
 
 </body>
