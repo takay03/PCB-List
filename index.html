@@ -389,6 +389,8 @@
 
   <div class="controls">
     <button class="action" onclick="exportData()">📥 Yedek İndir (JSON)</button>
+    <button class="action" onclick="document.getElementById('importFile').click()">📤 Yedekten Yükle</button>
+    <input type="file" id="importFile" accept=".json" style="display:none" onchange="importData(event)">
     <button class="action danger" onclick="resetAll()">🗑️ Tümünü Sıfırla</button>
   </div>
 
@@ -1029,6 +1031,57 @@
     a.download = 'pcb_rutini_yedek_' + new Date().toISOString().split('T')[0] + '.json';
     a.click();
     URL.revokeObjectURL(url);
+  }
+
+  function importData(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
+      let imported;
+      try {
+        imported = JSON.parse(e.target.result);
+      } catch {
+        alert('Geçersiz dosya: JSON okunamadı.');
+        return;
+      }
+      const keys = Object.keys(imported);
+      if (keys.length === 0) {
+        alert('Yedek dosyası boş görünüyor.');
+        return;
+      }
+      if (!confirm(`${keys.length} projenin verisi buluta yüklenecek. Aynı isimli mevcut kayıtların üzerine yazılır. Devam edilsin mi?`)) return;
+
+      setSyncStatus('saving');
+      try {
+        // Write each task as its own document, merging into current cloud data
+        const batch = db.batch();
+        for (const key of keys) {
+          const t = imported[key] || {};
+          // normalize to current schema
+          const normalized = {
+            status: t.status || 0,
+            statusHistory: t.statusHistory || [],
+            notes: t.notes || '',
+            images: t.images || [],
+            ratings: t.ratings || {},
+            thoughts: t.thoughts || ''
+          };
+          const docId = encodeURIComponent(key);
+          batch.set(tasksCol().doc(docId), normalized);
+          state[key] = normalized;
+        }
+        await batch.commit();
+        setSyncStatus('saved');
+        buildAllTasks();
+        alert('Yedek başarıyla yüklendi! ' + keys.length + ' proje geri getirildi.');
+      } catch (err) {
+        console.error(err);
+        setSyncStatus('error');
+        alert('Yükleme hatası: ' + err.message + '\n\nÇok büyük resimler varsa Firestore sınırına takılmış olabilir.');
+      }
+    };
+    reader.readAsText(file);
   }
 
   // ─── Auth flow ──────────────────────────────────
